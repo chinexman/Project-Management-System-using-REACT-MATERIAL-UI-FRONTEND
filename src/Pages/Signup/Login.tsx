@@ -4,46 +4,47 @@ import styled from "styled-components";
 import Logo from "../../Assets/logo.svg";
 import Loading from "./Spinner";
 import ErrorMessage from "./errorMessage";
+import { Link } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
-function Signup() {
-  const [fullname, setfullName] = useState("");
+function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
-  const [message, setMesssage] = useState("");
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [cookies, setCookie] = useCookies(["user"]);
 
+  const handle = () => {
+    setCookie("user", "gowtham", {
+      path: "/",
+    });
+  };
   const submitHandler = async (e: any) => {
     e.preventDefault();
 
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      setLoading(true);
+    const config = {
+      withCredentials: true,
+    };
+    setLoading(true);
 
-      const { data } = await axios.post(
-        "http://192.168.0.53:3008/users/signup",
+    await axios
+      .post(
+        "http://192.168.0.195:3008/users/login",
         {
-          fullname,
           email,
           password,
         },
-        config
-      );
-
-      console.log(data);
-      localStorage.setItem("userInfo", JSON.stringify(data));
-      setLoading(false);
-    } catch (error: any) {
-      console.log(error);
-      console.log(error.response.data);
-      // setError(error.response.data.message)
-      setLoading(false);
-    }
+        { withCredentials: true }
+      )
+      .then((response) => {
+        console.log("Success:", response);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error.response);
+        // setError(error.response.data.message)
+        setLoading(false);
+      });
   };
 
   return (
@@ -53,58 +54,47 @@ function Signup() {
       <div className="login">
         <img className="logo" src={Logo} alt="Login" />
         <BorderBottom />
-        <form onSubmit={submitHandler}>
-          <label>
-            <h3> Full Name</h3>
-            <Input
-              type="text"
-              placeholder="Full Name"
-              value={fullname}
-              onChange={(e) => setfullName(e.target.value)}
-              required
-            />
-          </label>
+        <form
+          //  onSubmit={submitHandler}
+          method="post"
+          action="http://192.168.0.195:3008/users/login"
+        >
           <label>
             <h3> Email Address</h3>
             <Input
               type="text"
               placeholder="Enter Email"
               value={email}
+              name="email"
               onChange={(e) => setEmail(e.target.value)}
-              required
             />
           </label>
 
           <label>
             <h3> Password</h3>
             <Input
-              type="text"
+              type="password"
               placeholder="Enter Paasword"
               value={password}
+              name="password"
               onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </label>
-          <label>
-            <h3>Repeat Password </h3>
-            <Input
-              id="fn"
-              type="text"
-              placeholder="Repeat Password"
-              required
-              //   value ={name}
-              //   onChange = {e => setfullName(e.target.value)}
             />
           </label>
 
-          <Button>signup </Button>
+          <Button onClick={handle}>Login </Button>
+
+          <Button>
+            <a href="http://192.168.0.53:3008/users/google">
+              Use Google Account
+            </a>
+          </Button>
         </form>
       </div>
     </Wrapper>
   );
 }
 
-export default Signup;
+export default Login;
 
 export const Wrapper = styled.div`
   width: 100vw;
