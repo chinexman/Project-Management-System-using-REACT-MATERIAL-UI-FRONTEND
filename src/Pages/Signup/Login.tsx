@@ -14,11 +14,6 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [_cookies, setCookie] = useCookies(["user"]);
 
-  const handle = () => {
-    setCookie("user", "gowtham", {
-      path: "/",
-    });
-  };
   const submitHandler = async (e: any) => {
     e.preventDefault();
 
@@ -30,7 +25,7 @@ function Login() {
     setLoading(true);
     await axios
       .request<AxiosInterface>({
-        url: "http://192.168.0.28:3008/users/login",
+        url: "https://kojjac.herokuapp.com/users/login",
         method: "post",
         data: { email, password },
         withCredentials: true,
@@ -42,16 +37,7 @@ function Login() {
         const token = response.data.token;
         await axios
           .request<{ msg: string }>({
-            url: "http://192.168.0.28:3008/users/welcome",
-            method: "get",
-          })
-          .catch((err) => {
-            console.log("Without Token!: ", err.response.data.msg);
-          });
-
-        await axios
-          .request<{ msg: string }>({
-            url: "http://192.168.0.28:3008/users/welcome",
+            url: "https://kojjac.herokuapp.com/users/welcome",
             headers: { token: token! },
             method: "get",
           })
@@ -95,7 +81,7 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </label>
-          <Button onClick={handle}>Login </Button>
+          <Button>Login </Button>
         </form>
       </div>
       <SSOWrapper>

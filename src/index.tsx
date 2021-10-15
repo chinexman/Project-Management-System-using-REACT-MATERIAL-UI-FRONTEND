@@ -9,9 +9,6 @@ ReactDOM.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
-  // <CookiesProvider>
-  //   <App />
-  // </CookiesProvider>,
   document.getElementById("root")
 );
 
