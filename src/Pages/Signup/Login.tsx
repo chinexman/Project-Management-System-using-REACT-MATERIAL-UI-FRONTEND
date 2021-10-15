@@ -97,44 +97,54 @@ function Login() {
           </label>
           <Button onClick={handle}>Login </Button>
         </form>
-        <a href="http://192.168.0.28:3008/users/google">
-          <Google>Use Google Account</Google>
+      </div>
+      <SSOWrapper>
+        <a href="https://kojjac.herokuapp.com/users/google">
+          <GoogleButton>Use Google Account</GoogleButton>
         </a>
         <a href="https://kojjac.herokuapp.com/users/auth/facebook/callback">
-          <Facebook>Use Facebook Account</Facebook>
+          <FacebookButton>Use Facebook Account</FacebookButton>
         </a>
-      </div>
+      </SSOWrapper>
     </Wrapper>
   );
 }
 
 export default Login;
 
-export const Google = styled.button`
-  width: 444px;
-  height: 50px;
-  border: none;
-  border-radius: 25px;
-  margin: 20px 0;
-  font-family: Heebo;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 21px;
-  background-color: var(--color-red);
+export const SSOWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
-export const Facebook = styled.button`
-  width: 444px;
+
+export const GoogleButton = styled.button`
+  width: 255px;
   height: 50px;
   border: none;
   border-radius: 25px;
-  margin: 20px 0;
+  margin: 20px 25px;
   font-family: Heebo;
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
   line-height: 21px;
-  background-color: var(--color-blue);
+  background-color: var(--color-green);
+  cursor: pointer;
+`;
+export const FacebookButton = styled.button`
+  width: 255px;
+  height: 50px;
+  border: none;
+  border-radius: 25px;
+  margin: 20px 25px;
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 21px;
+  background-color: var(--color-green);
+  cursor: pointer;
 `;
 
 export const Wrapper = styled.div`
@@ -142,6 +152,7 @@ export const Wrapper = styled.div`
   height: 100vh;
   background: var(--deepGrey-background);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   .login {
@@ -180,4 +191,5 @@ export const Button = styled.button`
   font-weight: bold;
   font-size: 14px;
   line-height: 21px;
+  cursor: pointer;
 `;

@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Logo from "../../Assets/logo.svg";
 import Loading from "./Spinner";
 import ErrorMessage from "./errorMessage";
+import { GoogleButton, FacebookButton, SSOWrapper } from "./Login";
 
 function Signup() {
   const [fullname, setfullName] = useState("");
@@ -97,9 +98,17 @@ function Signup() {
             />
           </label>
 
-          <Button>signup </Button>
+          <Button>Signup </Button>
         </form>
       </div>
+      <SSOWrapper>
+        <a href="https://kojjac.herokuapp.com/users/google">
+          <GoogleButton>Use Google Account</GoogleButton>
+        </a>
+        <a href="https://kojjac.herokuapp.com/users/auth/facebook/callback">
+          <FacebookButton>Use Facebook Account</FacebookButton>
+        </a>
+      </SSOWrapper>
     </Wrapper>
   );
 }
@@ -111,6 +120,7 @@ export const Wrapper = styled.div`
   height: 100vh;
   background: var(--deepGrey-background);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   .login {
@@ -149,4 +159,5 @@ export const Button = styled.button`
   font-weight: bold;
   font-size: 14px;
   line-height: 21px;
+  cursor: pointer;
 `;
