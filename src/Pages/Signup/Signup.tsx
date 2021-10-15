@@ -50,7 +50,7 @@ function Signup() {
   return (
     <Wrapper>
       {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
-      {loading && <Loading />}
+      {loading}
       <div className="login">
         <img className="logo" src={Logo} alt="Login" />
         <BorderBottom />

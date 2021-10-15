@@ -55,7 +55,7 @@ function Login() {
   return (
     <Wrapper>
       {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
-      {loading && <Loading />}
+      {loading}
       <div className="login">
         <img className="logo" src={Logo} alt="Login" />
         <BorderBottom />
@@ -68,6 +68,7 @@ function Login() {
               value={email}
               name="email"
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </label>
 
@@ -75,10 +76,11 @@ function Login() {
             <h3> Password</h3>
             <Input
               type="password"
-              placeholder="Enter Paasword"
+              placeholder="Enter Password"
               value={password}
               name="password"
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </label>
           <Button>Login </Button>
