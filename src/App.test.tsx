@@ -27,7 +27,7 @@ describe("Login", () => {
     });
     expect(Googlebutton).toBeInTheDocument();
   });
-   test("Test for the Facebook Button", async () => {
+  test("Test for the Facebook Button", async () => {
     render(
       <MemoryRouter>
         <Login />
@@ -37,9 +37,16 @@ describe("Login", () => {
       name: "Use Facebook Account",
     });
     expect(Facebookbutton).toBeInTheDocument();
+  });
+  test("Test for Email text", async () => {
+    render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>
+    );
+    expect(screen.getByText("Email Address")).toBeInTheDocument();
+  });
 });
-})
-
 
 describe("Signup", () => {
   test("Test for the Signup Button", async () => {
@@ -72,5 +79,13 @@ describe("Signup", () => {
       name: "Use Facebook Account",
     });
     expect(Facebookbutton).toBeInTheDocument();
+  });
+  test("Test for Email text", async () => {
+    render(
+      <MemoryRouter>
+        <Signup />
+      </MemoryRouter>
+    );
+    expect(screen.getByText("Email Address")).toBeInTheDocument();
   });
 });

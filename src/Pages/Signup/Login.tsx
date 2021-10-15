@@ -61,7 +61,7 @@ function Login() {
         <BorderBottom />
         <form onSubmit={submitHandler}>
           <label>
-            <h3> Email Address</h3>
+            <h3>Email Address</h3>
             <Input
               type="text"
               placeholder="Enter Email"
