@@ -8,8 +8,8 @@ function App() {
   return (
     <div className="App">
  <BrowserRouter>
- <Route path="/signup" component= {Signup} exact />
-<Route path="/login" component= {Login} exact />
+      <Route path="/signup" component= {Signup} exact />
+      <Route path="/login" component= {Login} exact />
  </BrowserRouter>
     </div>
   );

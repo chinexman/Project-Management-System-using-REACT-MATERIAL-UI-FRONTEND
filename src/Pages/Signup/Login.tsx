@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios, { Axios } from "axios";
 import styled from "styled-components";
 import Logo from "../../Assets/logo.svg";
 import Loading from "./Spinner";
@@ -10,9 +10,9 @@ import { useCookies } from "react-cookie";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
+  const [error, _setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [cookies, setCookie] = useCookies(["user"]);
+  const [_cookies, setCookie] = useCookies(["user"]);
 
   const handle = () => {
     setCookie("user", "gowtham", {
@@ -22,23 +22,42 @@ function Login() {
   const submitHandler = async (e: any) => {
     e.preventDefault();
 
-    const config = {
-      withCredentials: true,
-    };
+    interface AxiosInterface {
+      email: string;
+      password: string;
+      token?: string;
+    }
     setLoading(true);
-
     await axios
-      .post(
-        "http://192.168.0.195:3008/users/login",
-        {
-          email,
-          password,
-        },
-        { withCredentials: true }
-      )
-      .then((response) => {
+      .request<AxiosInterface>({
+        url: "http://192.168.0.28:3008/users/login",
+        method: "post",
+        data: { email, password },
+        withCredentials: true,
+      })
+      .then(async (response) => {
         console.log("Success:", response);
         setLoading(false);
+
+        const token = response.data.token;
+        await axios
+          .request<{ msg: string }>({
+            url: "http://192.168.0.28:3008/users/welcome",
+            method: "get",
+          })
+          .catch((err) => {
+            console.log("Without Token!: ", err.response.data.msg);
+          });
+
+        await axios
+          .request<{ msg: string }>({
+            url: "http://192.168.0.28:3008/users/welcome",
+            headers: { token: token! },
+            method: "get",
+          })
+          .then((response) => {
+            console.log("With Token!: ", response.data.msg);
+          });
       })
       .catch((error) => {
         console.log(error.response);
@@ -54,11 +73,7 @@ function Login() {
       <div className="login">
         <img className="logo" src={Logo} alt="Login" />
         <BorderBottom />
-        <form
-          //  onSubmit={submitHandler}
-          method="post"
-          action="http://192.168.0.195:3008/users/login"
-        >
+        <form onSubmit={submitHandler}>
           <label>
             <h3> Email Address</h3>
             <Input
@@ -80,21 +95,47 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </label>
-
           <Button onClick={handle}>Login </Button>
-
-          <Button>
-            <a href="http://192.168.0.53:3008/users/google">
-              Use Google Account
-            </a>
-          </Button>
         </form>
+        <a href="http://192.168.0.28:3008/users/google">
+          <Google>Use Google Account</Google>
+        </a>
+        <a href="https://kojjac.herokuapp.com/users/auth/facebook/callback">
+          <Facebook>Use Facebook Account</Facebook>
+        </a>
       </div>
     </Wrapper>
   );
 }
 
 export default Login;
+
+export const Google = styled.button`
+  width: 444px;
+  height: 50px;
+  border: none;
+  border-radius: 25px;
+  margin: 20px 0;
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 21px;
+  background-color: var(--color-red);
+`;
+export const Facebook = styled.button`
+  width: 444px;
+  height: 50px;
+  border: none;
+  border-radius: 25px;
+  margin: 20px 0;
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 21px;
+  background-color: var(--color-blue);
+`;
 
 export const Wrapper = styled.div`
   width: 100vw;
