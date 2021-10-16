@@ -40,8 +40,8 @@ function Signup() {
       localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
     } catch (error: any) {
-      console.log(error);
-      console.log(error.response.data);
+      // console.log(error);
+      alert(error.response.data);
       // setError(error.response.data.message)
       setLoading(false);
     }
@@ -79,7 +79,7 @@ function Signup() {
           <label>
             <h3> Password</h3>
             <Input
-              type="text"
+              type="password"
               placeholder="Enter Paasword"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -90,7 +90,7 @@ function Signup() {
             <h3>Repeat Password </h3>
             <Input
               id="fn"
-              type="text"
+              type="password"
               placeholder="Repeat Password"
               required
               //   value ={name}

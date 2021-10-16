@@ -42,11 +42,12 @@ function Login() {
             method: "get",
           })
           .then((response) => {
-            console.log("With Token!: ", response.data.msg);
+            alert(response.data.msg);
           });
       })
       .catch((error) => {
         console.log(error.response);
+        alert(error.response.data.msg);
         // setError(error.response.data.message)
         setLoading(false);
       });
