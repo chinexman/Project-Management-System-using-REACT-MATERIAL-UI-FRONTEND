@@ -18,11 +18,6 @@ function Signup() {
     e.preventDefault();
 
     try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
       setLoading(true);
 
       const { data } = await axios.post(
@@ -31,12 +26,10 @@ function Signup() {
           fullname,
           email,
           password,
-        },
-        config
+        }
       );
 
       console.log(data);
-      localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
     } catch (error: any) {
       console.log(error);

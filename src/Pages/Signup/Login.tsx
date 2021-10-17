@@ -1,18 +1,18 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import Logo from "../../Assets/logo.svg";
-import Loading from "./Spinner";
 import ErrorMessage from "./errorMessage";
-import { Link } from "react-router-dom";
-import { useCookies } from "react-cookie";
+import { authContext } from "../../Utils/Authcontext";
+import CustomRedirect from "../../Utils/CustomRedirect";
 
 function Login() {
+  console.log("rendering login page");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [cookies, setCookie] = useCookies(["user"]);
+  const { signIn, token } = useContext(authContext);
 
   const googleSSO = () => {
     const newWindow = window.open(
@@ -24,15 +24,9 @@ function Login() {
     console.log("kayode window:");
   };
 
-  const handle = () => {
-    setCookie("user", "gowtham");
-  };
   const submitHandler = async (e: any) => {
     e.preventDefault();
 
-    const config = {
-      withCredentials: true,
-    };
     setLoading(true);
 
     interface AxiosInterface {
@@ -47,10 +41,13 @@ function Login() {
           email,
           password,
         },
+        method: "post",
+        withCredentials: true,
       })
       .then(async (response) => {
         console.log("Success:", response);
-        const token = response.data.token;
+        const tokenFromServer = response.data.token;
+        signIn(tokenFromServer);
         setLoading(false);
       })
       .catch((error) => {
@@ -59,10 +56,12 @@ function Login() {
       });
   };
 
-  return (
+  return token ? (
+    <CustomRedirect />
+  ) : (
     <Wrapper>
       {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
-      {loading && <Loading />}
+
       <div className="login">
         <img className="logo" src={Logo} alt="Login" />
         <BorderBottom />
@@ -89,7 +88,9 @@ function Login() {
             />
           </label>
 
-          <Button onClick={handle}>Login </Button>
+          <Button onClick={submitHandler} disabled={loading}>
+            {loading ? "Logging in...." : "Login"}{" "}
+          </Button>
         </form>
         <Button onClick={googleSSO}>
           {/* <a href="http://localhost:3008/users/google" target="_blank"> */}
