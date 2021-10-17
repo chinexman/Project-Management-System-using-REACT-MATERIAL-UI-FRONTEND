@@ -10,52 +10,57 @@ import { useCookies } from "react-cookie";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, _setError] = useState(false);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [_cookies, setCookie] = useCookies(["user"]);
 
   const submitHandler = async (e: any) => {
     e.preventDefault();
 
-    interface AxiosInterface {
-      email: string;
-      password: string;
-      token?: string;
-    }
-    setLoading(true);
-    await axios
-      .request<AxiosInterface>({
-        url: "https://kojjac.herokuapp.com/users/login",
-        method: "post",
-        data: { email, password },
-        withCredentials: true,
-      })
-      .then(async (response) => {
-        console.log("Success:", response);
-        setLoading(false);
+    if (email === "" || password === "") {
+      setError("Email and Password are required");
+    } else {
+      interface AxiosInterface {
+        email: string;
+        password: string;
+        token?: string;
+      }
+      setLoading(true);
+      setError("");
+      await axios
+        .request<AxiosInterface>({
+          url: "https://kojjac.herokuapp.com/users/login",
+          method: "post",
+          data: { email, password },
+          withCredentials: true,
+        })
+        .then(async (response) => {
+          console.log("Success:", response);
+          setLoading(false);
 
-        const token = response.data.token;
-        await axios
-          .request<{ msg: string }>({
-            url: "https://kojjac.herokuapp.com/users/welcome",
-            headers: { token: token! },
-            method: "get",
-          })
-          .then((response) => {
-            alert(response.data.msg);
-          });
-      })
-      .catch((error) => {
-        console.log(error.response);
-        alert(error.response.data.msg);
-        // setError(error.response.data.message)
-        setLoading(false);
-      });
+          const token = response.data.token;
+          localStorage.setItem("token", token!);
+          await axios
+            .request<{ msg: string }>({
+              url: "https://kojjac.herokuapp.com/users/welcome",
+              headers: { token: token! },
+              method: "get",
+            })
+            .then((response) => {
+              alert(response.data.msg);
+            });
+        })
+        .catch((error) => {
+          console.log(error.response);
+          alert(error.response.data.msg);
+          // setError(error.response.data.message)
+          setLoading(false);
+        });
+    }
   };
 
   return (
     <Wrapper>
-      {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
       {loading}
       <div className="login">
         <img className="logo" src={Logo} alt="Login" />
@@ -69,7 +74,7 @@ function Login() {
               value={email}
               name="email"
               onChange={(e) => setEmail(e.target.value)}
-              required
+              // required
             />
           </label>
 
@@ -81,12 +86,17 @@ function Login() {
               value={password}
               name="password"
               onChange={(e) => setPassword(e.target.value)}
-              required
+              // required
             />
           </label>
-          <Button>Login </Button>
+          <Button disabled={loading}>
+            {" "}
+            {loading ? "logging in...." : "Login"}{" "}
+          </Button>
         </form>
+        {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
       </div>
+
       <SSOWrapper>
         <a href="https://kojjac.herokuapp.com/users/google">
           <GoogleButton>Use Google Account</GoogleButton>

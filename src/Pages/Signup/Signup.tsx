@@ -98,7 +98,9 @@ function Signup() {
             />
           </label>
 
-          <Button>Signup </Button>
+          <Button disabled={loading}>
+            {loading ? "Signing up" : "Signup"}{" "}
+          </Button>
         </form>
       </div>
       <SSOWrapper>
