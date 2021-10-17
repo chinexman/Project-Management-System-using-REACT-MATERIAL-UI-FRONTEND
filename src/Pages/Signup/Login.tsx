@@ -14,10 +14,18 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [cookies, setCookie] = useCookies(["user"]);
 
+  const googleSSO = () => {
+    const newWindow = window.open(
+      "https://kojjac.herokuapp.com/users/google",
+      "_blank",
+      "width=500,height=600"
+    );
+
+    console.log("kayode window:");
+  };
+
   const handle = () => {
-    setCookie("user", "gowtham", {
-      path: "/",
-    });
+    setCookie("user", "gowtham");
   };
   const submitHandler = async (e: any) => {
     e.preventDefault();
@@ -27,22 +35,26 @@ function Login() {
     };
     setLoading(true);
 
+    interface AxiosInterface {
+      email: string;
+      password: string;
+      token?: string;
+    }
     await axios
-      .post(
-        "http://192.168.0.195:3008/users/login",
-        {
+      .request<AxiosInterface>({
+        url: "https://kojjac.herokuapp.com/users/login",
+        data: {
           email,
           password,
         },
-        { withCredentials: true }
-      )
-      .then((response) => {
+      })
+      .then(async (response) => {
         console.log("Success:", response);
+        const token = response.data.token;
         setLoading(false);
       })
       .catch((error) => {
         console.log(error.response);
-        // setError(error.response.data.message)
         setLoading(false);
       });
   };
@@ -54,11 +66,7 @@ function Login() {
       <div className="login">
         <img className="logo" src={Logo} alt="Login" />
         <BorderBottom />
-        <form
-          //  onSubmit={submitHandler}
-          method="post"
-          action="http://192.168.0.195:3008/users/login"
-        >
+        <form onSubmit={submitHandler}>
           <label>
             <h3> Email Address</h3>
             <Input
@@ -82,13 +90,12 @@ function Login() {
           </label>
 
           <Button onClick={handle}>Login </Button>
-
-          <Button>
-            <a href="http://192.168.0.53:3008/users/google">
-              Use Google Account
-            </a>
-          </Button>
         </form>
+        <Button onClick={googleSSO}>
+          {/* <a href="http://localhost:3008/users/google" target="_blank"> */}
+          Use Google Account
+          {/* </a> */}
+        </Button>
       </div>
     </Wrapper>
   );

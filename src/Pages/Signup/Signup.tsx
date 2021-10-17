@@ -26,7 +26,7 @@ function Signup() {
       setLoading(true);
 
       const { data } = await axios.post(
-        "http://192.168.0.53:3008/users/signup",
+        "https://kojjac.herokuapp.com/users/signup",
         {
           fullname,
           email,
