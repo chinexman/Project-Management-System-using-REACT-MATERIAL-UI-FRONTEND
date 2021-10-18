@@ -1,10 +1,12 @@
 import React from "react";
 import "./App.css";
 import Signup from "./Pages/Signup/Signup";
-import Login from "./Pages/Signup/Login";
+import Login from "./Pages/signIn/Login";
 import { Switch, Route, Link } from "react-router-dom";
 import ProtectedRoute from "./Utils/ProtectedRoute";
 import TestHome from "./Pages/Home/TestHome";
+import ChangePassword from "./Pages/changePassword/ChangePassword";
+import ForgetPassword from "./Pages/forgetPassword/ForgetPassword";
 
 function App() {
   console.log("App is re-rendering");
@@ -24,6 +26,11 @@ function App() {
           {console.log("Home called")}
           <div> This is Home and protected too, protected tooo </div>
         </ProtectedRoute>
+        <ProtectedRoute path="/changepassword">
+          <ChangePassword />
+        </ProtectedRoute>
+
+        <Route path="/forgetpassword" component={ForgetPassword} />
       </Switch>
     </div>
   );

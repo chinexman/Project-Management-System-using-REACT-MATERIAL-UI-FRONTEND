@@ -1,18 +1,20 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import Logo from "../../Assets/logo.svg";
-import Loading from "./Spinner";
 import ErrorMessage from "./errorMessage";
+import { useHistory } from "react-router-dom";
+import { GoogleButton, FacebookButton, SSOWrapper } from "../signIn/Login";
 
 function Signup() {
   const [fullname, setfullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
-  const [message, setMesssage] = useState("");
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const history = useHistory();
 
   const submitHandler = async (e: any) => {
     e.preventDefault();
@@ -30,11 +32,11 @@ function Signup() {
       );
 
       console.log(data);
+      setEmailSent(true);
       setLoading(false);
     } catch (error: any) {
       console.log(error);
-      console.log(error.response.data);
-      // setError(error.response.data.message)
+      setError(error.response.data.message);
       setLoading(false);
     }
   };
@@ -42,7 +44,6 @@ function Signup() {
   return (
     <Wrapper>
       {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
-      {loading && <Loading />}
       <div className="login">
         <img className="logo" src={Logo} alt="Login" />
         <BorderBottom />
@@ -60,7 +61,7 @@ function Signup() {
           <label>
             <h3> Email Address</h3>
             <Input
-              type="text"
+              type="email"
               placeholder="Enter Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -71,7 +72,7 @@ function Signup() {
           <label>
             <h3> Password</h3>
             <Input
-              type="text"
+              type="password"
               placeholder="Enter Paasword"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -82,17 +83,31 @@ function Signup() {
             <h3>Repeat Password </h3>
             <Input
               id="fn"
-              type="text"
+              type="password"
               placeholder="Repeat Password"
               required
-              //   value ={name}
-              //   onChange = {e => setfullName(e.target.value)}
+              value={repeatPassword}
+              onChange={(e) => setRepeatPassword(e.target.value)}
             />
           </label>
 
-          <Button>signup </Button>
+          <Button disabled={loading}>
+            {loading ? "Signing up" : "Signup"}{" "}
+          </Button>
         </form>
+
+        <Button onClick={(e) => history.push("/login")}>
+          Go to login page
+        </Button>
       </div>
+      <SSOWrapper>
+        <a href="https://kojjac.herokuapp.com/users/google">
+          <GoogleButton>Use Google Account</GoogleButton>
+        </a>
+        <a href="https://kojjac.herokuapp.com/users/auth/facebook/callback">
+          <FacebookButton>Use Facebook Account</FacebookButton>
+        </a>
+      </SSOWrapper>
     </Wrapper>
   );
 }
@@ -104,6 +119,7 @@ export const Wrapper = styled.div`
   height: 100vh;
   background: var(--deepGrey-background);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   .login {
@@ -142,4 +158,5 @@ export const Button = styled.button`
   font-weight: bold;
   font-size: 14px;
   line-height: 21px;
+  cursor: pointer;
 `;
