@@ -1,62 +1,60 @@
-import React, { useState } from "react";
-import axios, { Axios } from "axios";
+import React, { useContext, useState } from "react";
+import axios from "axios";
 import styled from "styled-components";
 import Logo from "../../Assets/logo.svg";
-import Loading from "./Spinner";
-import ErrorMessage from "./errorMessage";
+import ErrorMessage from "../Signup/errorMessage";
+import { authContext } from "../../Utils/Authcontext";
+import CustomRedirect from "../../Utils/CustomRedirect";
 import { Link } from "react-router-dom";
-import { useCookies } from "react-cookie";
 
 function Login() {
+  console.log("rendering login page");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, _setError] = useState(false);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [_cookies, setCookie] = useCookies(["user"]);
+  const { signIn, token } = useContext(authContext);
 
   const submitHandler = async (e: any) => {
     e.preventDefault();
+    if (email === "" || password === "") {
+      setError("Email and Password are required");
+      return;
+    }
+    setLoading(true);
 
     interface AxiosInterface {
       email: string;
       password: string;
       token?: string;
     }
-    setLoading(true);
     await axios
       .request<AxiosInterface>({
         url: "https://kojjac.herokuapp.com/users/login",
+        data: {
+          email,
+          password,
+        },
         method: "post",
-        data: { email, password },
         withCredentials: true,
       })
       .then(async (response) => {
         console.log("Success:", response);
+        const tokenFromServer = response.data.token;
+        signIn(tokenFromServer);
         setLoading(false);
-
-        const token = response.data.token;
-        await axios
-          .request<{ msg: string }>({
-            url: "https://kojjac.herokuapp.com/users/welcome",
-            headers: { token: token! },
-            method: "get",
-          })
-          .then((response) => {
-            alert(response.data.msg);
-          });
       })
       .catch((error) => {
         console.log(error.response);
-        alert(error.response.data.msg);
-        // setError(error.response.data.message)
         setLoading(false);
       });
   };
 
-  return (
+  return token ? (
+    <CustomRedirect />
+  ) : (
     <Wrapper>
       {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
-      {loading}
       <div className="login">
         <img className="logo" src={Logo} alt="Login" />
         <BorderBottom />
@@ -64,12 +62,12 @@ function Login() {
           <label>
             <h3>Email Address</h3>
             <Input
-              type="text"
+              type="email"
               placeholder="Enter Email"
               value={email}
               name="email"
               onChange={(e) => setEmail(e.target.value)}
-              required
+              // required
             />
           </label>
 
@@ -81,12 +79,20 @@ function Login() {
               value={password}
               name="password"
               onChange={(e) => setPassword(e.target.value)}
-              required
+              // required
             />
           </label>
-          <Button>Login </Button>
+          <Button disabled={loading}>
+            {" "}
+            {loading ? "logging in...." : "Login"}{" "}
+          </Button>
         </form>
+        <Link to="/forgetpassword" style={{ color: "blue" }}>
+          Forget password?
+        </Link>
+        {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
       </div>
+
       <SSOWrapper>
         <a href="https://kojjac.herokuapp.com/users/google">
           <GoogleButton>Use Google Account</GoogleButton>
@@ -98,8 +104,6 @@ function Login() {
     </Wrapper>
   );
 }
-
-export default Login;
 
 export const SSOWrapper = styled.div`
   display: flex;
@@ -182,3 +186,5 @@ export const Button = styled.button`
   line-height: 21px;
   cursor: pointer;
 `;
+
+export default Login;

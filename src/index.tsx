@@ -2,13 +2,20 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
-// import { CookiesProvider } from "react-cookie";
 import reportWebVitals from "./reportWebVitals";
+import { BrowserRouter } from "react-router-dom";
+import dotenv from "dotenv";
+import { AuthcontextProvider } from "./Utils/Authcontext";
+
+//start up environment variable
+dotenv.config();
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <BrowserRouter>
+    <AuthcontextProvider>
+      <App />
+    </AuthcontextProvider>
+  </BrowserRouter>,
   document.getElementById("root")
 );
 

@@ -1,13 +1,11 @@
 import { authContext } from "../../Utils/Authcontext";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { useHistory } from "react-router";
 import {Grid} from "../../components/Sidebar/sidebar.styles."
 import Image from "../../Images/profile2.png";
 import Icon from "../../Assets/design.svg"
 import Logo from "../../Assets/logo.svg"
-
-
+import { useHistory } from "react-router";
 
 function TestHome() {
   console.log("rendering testHome");

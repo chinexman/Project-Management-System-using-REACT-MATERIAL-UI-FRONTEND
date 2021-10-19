@@ -1,10 +1,17 @@
-import React from 'react';
- import './App.css';
- import Signup from './Pages/Signup/Signup'; 
-  import Login from './Pages/Signup/Login'; 
- import {BrowserRouter, Route } from 'react-router-dom';
+import React from "react";
+import "./App.css";
+import Signup from "./Pages/Signup/Signup";
+import Login from "./Pages/signIn/Login";
+import { Switch, Route, Link } from "react-router-dom";
+import ProtectedRoute from "./Utils/ProtectedRoute";
+import TestHome from "./Pages/Home/TestHome";
+import ChangePassword from "./Pages/changePassword/ChangePassword";
+import ForgetPassword from "./Pages/forgetPassword/ForgetPassword";
+import SsoLogin from "./Pages/signIn/SsoLogin";
+import ResetPassword from "./Pages/resetPassword/ResetPassword";
 
 function App() {
+  console.log("App is re-rendering");
   return (
     <div className="App">
       <Switch>
