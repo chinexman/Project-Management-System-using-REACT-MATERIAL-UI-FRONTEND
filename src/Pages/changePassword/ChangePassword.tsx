@@ -1,17 +1,20 @@
 import axios from "axios";
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { useState } from "react";
 import { Wrapper, Input, Button } from "../Signup/Signup";
 import ChangePasswordTopbar from "../../components/ChangePasswordTopbar";
+import { authContext } from "../../Utils/Authcontext";
 
 export default function ChangePassword() {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
+  const { token } = useContext(authContext);
 
   const submitHandler = async (e: any) => {
     e.preventDefault();
+    console.log("changepassword says:", token);
     interface ChangePassword {
       oldPassword: string;
       newPassword: string;
@@ -20,7 +23,6 @@ export default function ChangePassword() {
     }
 
     try {
-      const token = localStorage.getItem("token");
       await axios
         .request<ChangePassword>({
           url: "https://kojjac.herokuapp.com/users/password/changepassword",

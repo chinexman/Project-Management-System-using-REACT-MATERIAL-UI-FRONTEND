@@ -7,6 +7,8 @@ import ProtectedRoute from "./Utils/ProtectedRoute";
 import TestHome from "./Pages/Home/TestHome";
 import ChangePassword from "./Pages/changePassword/ChangePassword";
 import ForgetPassword from "./Pages/forgetPassword/ForgetPassword";
+import SsoLogin from "./Pages/signIn/SsoLogin";
+import ResetPassword from "./Pages/resetPassword/ResetPassword";
 
 function App() {
   console.log("App is re-rendering");
@@ -19,18 +21,19 @@ function App() {
         </Route>
         <Route path="/signup" component={Signup} exact />
         <Route path="/login" component={Login} exact />
+        <Route path="/ssologin/:token" component={SsoLogin} />
         <ProtectedRoute path="/protected">
-          <TestHome />
+          <div> This is Home and protected too, protected tooo </div>
         </ProtectedRoute>
         <ProtectedRoute path="/home">
-          {console.log("Home called")}
-          <div> This is Home and protected too, protected tooo </div>
+          <TestHome />
         </ProtectedRoute>
         <ProtectedRoute path="/changepassword">
           <ChangePassword />
         </ProtectedRoute>
 
         <Route path="/forgetpassword" component={ForgetPassword} />
+        <Route path="/resetpassword/:token" component={ResetPassword} />
       </Switch>
     </div>
   );

@@ -15,7 +15,7 @@ export default function ChangePasswordTopbar() {
           </Link>
         </li>
         <li>
-          <Link className="linktag" to="changepassword">
+          <Link className="linktag" to="/changepassword">
             Change Password
           </Link>
         </li>

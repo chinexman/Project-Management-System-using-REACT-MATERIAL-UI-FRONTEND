@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import Logo from "../../Assets/logo.svg";
 import ErrorMessage from "./errorMessage";
 import { useHistory } from "react-router-dom";
 import { GoogleButton, FacebookButton, SSOWrapper } from "../signIn/Login";
+import { authContext } from "../../Utils/Authcontext";
+import CustomRedirect from "../../Utils/CustomRedirect";
 
 function Signup() {
   const [fullname, setfullName] = useState("");
@@ -15,6 +17,7 @@ function Signup() {
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const history = useHistory();
+  const { token } = useContext(authContext);
 
   const submitHandler = async (e: any) => {
     e.preventDefault();
@@ -41,7 +44,9 @@ function Signup() {
     }
   };
 
-  return (
+  return token ? (
+    <CustomRedirect />
+  ) : (
     <Wrapper>
       {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
       <div className="login">

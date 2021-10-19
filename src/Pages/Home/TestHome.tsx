@@ -15,7 +15,7 @@ function TestHome() {
   useEffect(() => {
     axios
       .request<{ msg: string }>({
-        url: backendUrl + "users/welcome",
+        url: backendUrl + "/users/welcome",
         headers: {
           token: token as string,
         },
@@ -24,11 +24,15 @@ function TestHome() {
       .then((response) => {
         console.log(response);
         setResponse(response.data.msg);
+
         setLoading(false);
       })
       .catch((e) => {
         setResponse(e.response.data.msg);
         setLoading(false);
+        if (e.response.status === 401) {
+          history.push("/login");
+        }
       });
   }, []);
 
