@@ -14,6 +14,7 @@ function TestHome() {
   const [loading, setLoading] = useState(true);
   const [serverResponse, setResponse] = useState("");
   const history = useHistory();
+  const [ toggle, setToggle] = useState(false)
 
   useEffect(() => {
     axios
@@ -45,10 +46,11 @@ function TestHome() {
     history.push("/login");
   };
 
-  let sidebar = document.querySelector(".sidebar");
-  function menuBtnChange() {
-      sidebar?.classList.toggle("open");
-  }  
+  const showSidebar = () => {
+    setToggle(!toggle)
+    let sidebar = document.querySelector(".sidebar");
+        sidebar?.classList.toggle("open");
+  };
   return loading ? (
     <h4>Loading... </h4>
   ) : (
@@ -57,7 +59,7 @@ function TestHome() {
     <div className="logo-details">
   <i className='bx bxl-c-plus-plus icon'><img style ={{width:'30%', marginRight:'1%'}}src={Logo} alt = "logo" /></i>
     <div className="logo_name">PROJECTUS</div>
-    <i className='bx bx-menu' onClick={menuBtnChange} id="btn" ><svg fill="#fff" viewBox="0 0 100 80" width="20" height="20">
+    <i className='bx bx-menu' onClick={showSidebar} id="btn" ><svg fill="#fff" viewBox="0 0 100 80" width="20" height="20">
 <rect width="100" height="20"></rect>x
 <rect y="30" width="100" height="20"></rect>
 <rect y="60" width="100" height="20"></rect>
