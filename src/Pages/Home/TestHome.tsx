@@ -6,6 +6,7 @@ import Image from "../../Images/profile2.png";
 import Icon from "../../Assets/design.svg"
 import Logo from "../../Assets/logo.svg"
 import { useHistory } from "react-router";
+import Button from '@material-ui/core/Button';
 import Add from "../../components/Add A Team/addATeam"
 
 function TestHome() {
@@ -142,6 +143,7 @@ function TestHome() {
             <li>
                 <a href="#">
                 <img style={{width: '8%', height: '8%'}} src= {Icon} alt = "icon" />
+
                     <span className="links_name" id="add" > +Add a Project</span>
                 </a>
                 <span className="tooltip">Notifications</span>
@@ -175,6 +177,7 @@ function TestHome() {
             </li>
             <li>
                 <a href="#">
+                    
                     <span className="links_name" id="add" > +Add a Project</span>
                 </a>
                 <span className="tooltip">Notifications</span>
