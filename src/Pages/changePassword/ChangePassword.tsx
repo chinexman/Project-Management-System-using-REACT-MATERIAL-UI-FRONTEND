@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Wrapper, Input, Button } from "../Signup/Signup";
 import ChangePasswordTopbar from "../../components/ChangePasswordTopbar";
 import { authContext } from "../../Utils/Authcontext";
+import Home from "../Home/Home";
 
 export default function ChangePassword() {
   const [oldPassword, setOldPassword] = useState("");
@@ -39,7 +40,7 @@ export default function ChangePassword() {
     }
   };
   return (
-    <>
+    <Home>
       <ChangePasswordTopbar />
       <ChangepasswordWrapper>
         <div className="changepasswordForm">
@@ -82,7 +83,7 @@ export default function ChangePassword() {
           </form>
         </div>
       </ChangepasswordWrapper>
-    </>
+    </Home>
   );
 }
 

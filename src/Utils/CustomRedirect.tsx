@@ -6,11 +6,11 @@ const CustomRedirect: FC<{}> = () => {
   const history = useHistory();
 
   const { from } = (location.state as { from: string }) || {
-    from: "/home",
+    from: "/changepassword",
   };
 
   useEffect(() => {
-    if (from !== "/home") {
+    if (from !== "/changepassword") {
       history.replace(from);
     } else {
       history.push(from);
