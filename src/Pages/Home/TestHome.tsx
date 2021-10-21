@@ -6,6 +6,7 @@ import Image from "../../Images/profile2.png";
 import Icon from "../../Assets/design.svg"
 import Logo from "../../Assets/logo.svg"
 import { useHistory } from "react-router";
+import Add from "../../components/Add A Team/addATeam"
 
 function TestHome() {
   console.log("rendering testHome");
@@ -184,6 +185,7 @@ function TestHome() {
     <section className="home-section">
             <h4 >{serverResponse}</h4>
   <button  onClick={handleSignOut}>SignOut </button>
+  <Add />
         </section>
         </Grid>
   );
