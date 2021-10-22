@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 interface propType {
-  headerlinks: { name: string; link: string }[];
+  headerlinks: { name: string; link: string }[] | [];
   header: string;
 }
 export default function Header(props: propType) {

@@ -1,14 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  ChangeEvent,
+} from "react";
 import { Form } from "react-bootstrap";
 import styled from "styled-components";
 import { setTimeout } from "timers";
 import Header from "../../components/Header";
 import Image from "../../Images/avatar.jpg";
 import Delete from "../../Images/Delete.svg";
+import { authContext } from "../../Utils/Authcontext";
 import Home from "../Home/Home";
-
 function Profile() {
   type teamType = string[];
   const [fullname, setFullName] = useState("");
@@ -16,12 +22,15 @@ function Profile() {
   const [gender, setGender] = useState("");
   const [location, setLocation] = useState("");
   // const [location, setLocation] = useState('')
-  const [profileImage, setProfileImage] = useState("");
+  // const profileImgInput= useRef<HTMLInputElement>(null)
+  const [profileImage, setProfileImage] = useState<File>();
+  const [profileImgUrl, setProfileImgUrl] = useState("");
   const [about, setAbout] = useState("");
   const [teams, setTeams] = useState<teamType>([]);
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState("");
   const [file, setFile] = useState("");
+  const { token } = useContext(authContext);
   ////test array of teams
   const teamsArr = [
     "Front-end",
@@ -31,7 +40,11 @@ function Profile() {
     "Front-end",
     "middle-end",
   ];
-  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    changePicFile();
+  }, [profileImage]);
+
   useEffect(() => {
     setTeams(teamsArr); //the getAllteams endpoint
     axios
@@ -47,20 +60,17 @@ function Profile() {
         setGender(response.data.data.gender);
         setLocation(response.data.data.location);
         setAbout(response.data.data.about);
-        setProfileImage(response.data.data.profileImage);
-
+        setProfileImgUrl(response.data.data.profileImage);
         console.log(response.data.data);
       })
       .catch((err) => {
         console.log(err.response);
       });
-
     //getting the teams the user is on
     // axios.request({
     // url: "https://kojjac.herokuapp.com/users/profile",
     // })
   }, []);
-
   const cancelAll = () => {
     setFullName("");
     setRole("");
@@ -69,11 +79,9 @@ function Profile() {
     setAbout("");
     //i don't know if the teams should also be cancelled
   };
-
   const leaveTeamFunc = () => {
     //this should prompt the leave-team end-point
   };
-
   const submitHandler = (e: any) => {
     e.preventDefault();
     setLoading(true);
@@ -89,35 +97,54 @@ function Profile() {
       .then((response: any) => {
         setLoading(false);
         setFailed("Updated successfully");
-
         console.log(response);
       })
       .catch((err) => {
         setFailed(err.response.data.messsage);
         console.log(err.response);
       });
+    //  axios
+    // .request({
+    //   url: "https://kojjac.herokuapp.com/users/uploadProfile",
+    //   method: "post",
+    //   data: { profileImage },
+    //   headers: { token: token! },
+    //   withCredentials: true,
+    // })
+    // .then((response: any) => {
+    //   setLoading(false);
+    //   setFailed("Updated successfully");
+    //   console.log(response);
+    // })
+    // .catch((err) => {
+    //   setFailed(err.response.data.messsage);
+    //   console.log(err.response);
+    // });
   };
-
-  const changePicFile = (e: any) => {
+  function handleImgChange(e: ChangeEvent<HTMLInputElement>) {
+    setProfileImage(e.target.files![0]);
+  }
+  const changePicFile = () => {
     // e.preventDefault() ///to allow the reload of the page when the pic is changed
+    const formData = new FormData();
+    formData.append("file", profileImage as File);
     axios
       .request({
-        url: "https://kojjac.herokuapp.com/users/uploadPictureCloudinary",
+        url: "https://kojjac.herokuapp.com/users/uploadProfile",
         method: "post",
-        data: { profileImage },
+        data: formData,
         headers: { token: token! },
-        withCredentials: true,
       })
       .then((response: any) => {
         setLoading(false);
-        setFailed("Updated successfully");
-        console.log(response);
+        console.log("Change PicFile says: ", response);
+        setProfileImgUrl(response.data.data.profileImage);
       })
       .catch((err) => {
         setFailed(err.response.data.messsage);
+        // alert(err.response.message);
         console.log(err.response);
       });
-    console.log(e.target.files[0]);
   };
   const headerlinks = [
     {
@@ -129,22 +156,20 @@ function Profile() {
       link: "/changepassword",
     },
   ];
-
   return (
-    <Home>
+    <>
       <Header header="Profile Settings" headerlinks={headerlinks}></Header>
       <Wrapper>
         <div className="image">
           {/* <div onClick={changePic} className="change-pic-div">change</div> */}
           <input
             className="change-pic-div"
-            value={profileImage}
-            onChange={() => changePicFile}
+            onChange={handleImgChange}
+            // onClick={(e) => changePicFile(e)}
             accept="Image/"
             type="file"
           />
-
-          <img src={profileImage} alt="avatar" />
+          <img src={profileImgUrl} alt="avatar" />
         </div>
         <Form className="profileForm" onSubmit={submitHandler}>
           <label>
@@ -183,7 +208,6 @@ function Profile() {
               placeholder="Location "
             />
           </label>
-
           <label>
             <h3> About</h3>
             <textarea
@@ -204,12 +228,10 @@ function Profile() {
           </p>
         </Form>
       </Wrapper>
-    </Home>
+    </>
   );
 }
-
 export default Profile;
-
 const Wrapper = styled.div`
   margin-top: 5rem;
   padding-top: 1rem;
@@ -223,14 +245,12 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-
   .profileForm {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
   }
-
   .image {
     width: 120px;
     height: 120px;
@@ -239,30 +259,30 @@ const Wrapper = styled.div`
     position: relative;
     margin-bottom: 30px;
   }
-
   img {
     width: 100%;
     height: 100%;
     border-radius: 50%;
     /* position: absolute;
-
     clip-path: circle(); */
   }
-
   .change-pic-div {
-    width: 100px;
+    width: 95px;
     height: 35px;
     background-color: var(--lightGrey-background);
     position: absolute;
-    /* position: relative;*/
-    top: 100px;
-    left: 25px;
-    text-align: center;
+    top: 90px;
+    left: 12px;
     cursor: pointer;
     padding: 5px 10px;
-    border-radius: 5px 5px 5px 5px;
+    border-radius: 0px 0px 100px 100px;
+    opacity: 0.7;
+    border: none;
+    outline: 0;
   }
-
+  .change-pic-div::-webkit-file-upload-button {
+    border: none;
+  }
   .button {
     border-radius: 50px;
     background-color: var(--color-green);
@@ -275,18 +295,15 @@ const Wrapper = styled.div`
     cursor: pointer;
     font-weight: bold;
   }
-
   h3 {
     font-size: 1rem;
   }
-
   .cancel-btn {
     display: block;
     text-align: center;
     font-weight: bold;
     cursor: pointer;
   }
-
   .about-textBox {
     padding: 10px;
     margin: 10px 0;
@@ -296,7 +313,6 @@ const Wrapper = styled.div`
     border-radius: 10px;
     background-color: var(--lightGrey-background);
   }
-
   .teams-input {
     width: 40vw;
     min-width: 300px;
@@ -307,18 +323,15 @@ const Wrapper = styled.div`
     margin: 10px 0;
     display: flex;
     padding: 15px;
-
     height: 80px;
     overflow-x: scroll;
     overflow-y: hidden;
   }
-
   .team-div {
     margin-left: 5px;
     justify-content: center;
     align-items: center;
   }
-
   .team-tag {
     background-color: #ffffff;
     border-radius: 20px;
@@ -326,18 +339,15 @@ const Wrapper = styled.div`
     margin-top: -10px;
     margin-right: 5px;
   }
-
   .removeTeam {
     cursor: pointer;
   }
-
   .failure-tag {
     font-style: italic;
     margin: 10px 0px;
     color: red;
   }
 `;
-
 const Input = styled.input`
   width: 40vw;
   min-width: 300px;

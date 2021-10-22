@@ -21,7 +21,7 @@ function AddTeam() {
     useEffect(() => {
         setTeams(teamsArr) //the getAllteams endpoint
         axios.request({
-        url: "https://kojjac.herokuapp.com/users/profile",
+        url: "https://kojjac.herokuapp.com/",
         method: "get",
         headers: {token:token!},
         withCredentials: true
@@ -35,22 +35,6 @@ function AddTeam() {
     }, [])
 
 
-    const changePic = () => {
-        //i don't think we should prompt this
-        axios.request({
-            url: "https://kojjac.herokuapp.com/",
-            method: "post",
-            data: { fullname },
-            headers: {token:token!},
-            withCredentials: true
-        }).then((response: any) => {
-           console.log(response)
-        }).catch((err)=> {
-
-           console.log(err.response)
-        })
-    }
-
     const leaveTeamFunc = () => {
         //this should prompt the leave-team end-point
     }
@@ -60,8 +44,8 @@ function AddTeam() {
         setLoading(true)
         //this should prompt the update-[profile end-point
         axios.request({
-        url: "https://kojjac.herokuapp.com/users/profile",
-        method: "put",
+        url: "https://kojjac.herokuapp.com/",
+        method: "post",
         data: { fullname },
         headers: {token:token!},
         withCredentials: true
@@ -77,10 +61,6 @@ function AddTeam() {
         })
         
         
-    }
-
-    const changePicFile = (e:any) => {
-        console.log(e.target.files[0])
     }
 
     return (
@@ -148,35 +128,7 @@ flex-direction: column;
     align-items: center;
     justify-content: center;
 }
-.image{
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background-color: #ffffff;
-    position: relative;
-    margin-bottom: 30px;
-    
-}
-img{
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    /* position: absolute;
-    clip-path: circle(); */
-}
-.change-pic-div{
-    width: 100px;
-    height: 35px;
-    background-color: var(--lightGrey-background);
-    position: absolute;
-    /* position: relative;*/
-    top: 100px; 
-    left: 25px;
-    text-align: center;
-    cursor: pointer;
-    padding: 5px 10px;
-    border-radius: 5px 5px 5px 5px;
-}
+
 .button{
     border-radius: 50px;
     background-color: var(--color-green);
@@ -197,15 +149,6 @@ h3{
     text-align: center;
     font-weight: bold;
     cursor: pointer;
-}
-.about-textBox{
-    padding:10px;
-    margin: 10px 0;
-    width: 40vw;
-    height: 15vh;
-    border: none;
-    border-radius: 10px;
-    background-color: var(--lightGrey-background);
 }
 .teams-input{
     width: 40vw;

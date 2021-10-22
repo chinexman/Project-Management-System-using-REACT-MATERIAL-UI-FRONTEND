@@ -6,12 +6,14 @@ import { Wrapper, Input, Button } from "../Signup/Signup";
 import ChangePasswordTopbar from "../../components/ChangePasswordTopbar";
 import { authContext } from "../../Utils/Authcontext";
 import Home from "../Home/Home";
+import { useHistory } from "react-router-dom";
 
 export default function ChangePassword() {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const { token } = useContext(authContext);
+  const history = useHistory();
 
   const submitHandler = async (e: any) => {
     e.preventDefault();
@@ -40,7 +42,7 @@ export default function ChangePassword() {
     }
   };
   return (
-    <Home>
+    <>
       <ChangePasswordTopbar />
       <ChangepasswordWrapper>
         <div className="changepasswordForm">
@@ -48,7 +50,7 @@ export default function ChangePassword() {
             <label>
               <h4>Old Password</h4>
               <ChangePasswordInput
-                type="text"
+                type="password"
                 placeholder="Old Password"
                 value={oldPassword}
                 name="email"
@@ -79,16 +81,19 @@ export default function ChangePassword() {
               />
             </label>
             <ChangePasswordButton>Change Password</ChangePasswordButton>
-            <CancelButton>Cancel</CancelButton>
+            <CancelButton onClick={(e) => history.push("/profile")}>
+              Cancel
+            </CancelButton>
           </form>
         </div>
       </ChangepasswordWrapper>
-    </Home>
+    </>
   );
 }
 
 export const CancelButton = styled.h5`
   text-align: center;
+  cursor: pointer;
 `;
 
 export const ChangepasswordWrapper = styled.div`

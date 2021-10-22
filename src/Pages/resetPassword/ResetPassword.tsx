@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useState, useContext } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { authContext } from "../../Utils/Authcontext";
+import Header from "../../components/Header";
 
 export default function ResetPassword() {
   const [newPassword, setNewPassword] = useState("");
@@ -45,6 +46,7 @@ export default function ResetPassword() {
   };
   return (
     <>
+      <Header header="Reset Password" headerlinks={[]} />
       <ChangepasswordWrapper>
         <div className="changepasswordForm">
           {success ? (
@@ -89,9 +91,11 @@ export default function ResetPassword() {
                 />
               </label>
               <ChangePasswordButton>Change Password</ChangePasswordButton>
-              <CancelButton>Cancel</CancelButton>
             </form>
           )}
+          <ChangePasswordButton onClick={(e) => history.push("/login")}>
+            Back to Login{" "}
+          </ChangePasswordButton>
           {errorMsg && <p style={{ color: "red" }}>{errorMsg}</p>}
         </div>
       </ChangepasswordWrapper>
