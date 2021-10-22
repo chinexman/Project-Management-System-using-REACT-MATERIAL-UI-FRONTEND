@@ -6,6 +6,21 @@ import Image from "../../Images/profile2.png";
 import Icon from "../../Assets/design.svg";
 import Logo from "../../Assets/logo.svg";
 import { useHistory } from "react-router";
+import Button from '@material-ui/core/Button';
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
+import { makeStyles } from '@material-ui/core/styles';
+import AddTeam from "../../components/Add A Team/AddTeam"
+
+
+const useStyles = makeStyles(theme => ({
+  modal: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+  }
+}));
 
 const Home: FC<{}> = ({ children }) => {
   console.log("renderi");
@@ -16,7 +31,7 @@ const Home: FC<{}> = ({ children }) => {
   const [user, setUser] = useState<{ [key: string]: any }>({ name: "" });
   const history = useHistory();
   const [toggle, setToggle] = useState(false);
-
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     axios
       .request<{ msg: string; data: { [key: string]: any } }>({
@@ -51,6 +66,16 @@ const Home: FC<{}> = ({ children }) => {
     let sidebar = document.querySelector(".sidebar");
     sidebar?.classList.toggle("open");
   };
+ 
+  const classes = useStyles();
+  const handleOpen = () => {
+      setOpen(true);
+  };
+
+  const handleClose = () => {
+      setOpen(false);
+  };
+
   return loading ? (
     <h4>Loading... </h4>
   ) : (
@@ -222,14 +247,40 @@ const Home: FC<{}> = ({ children }) => {
           </li>
           <li>
             <a href="#">
-              <span className="links_name" id="add">
+            <Button  onClick={handleOpen}>
+            <span className="links_name" id="add">
                 {" "}
-                +Add a Project
+                +Add a Team
               </span>
+            </Button>
+            <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={classes.modal}
+                open={open}
+                onClose={handleClose}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                    timeout: 500,
+                }}
+            >
+                <Fade in={open}>
+                    <div>
+                      <AddTeam /> 
+                    </div>
+                </Fade>
+            </Modal>
             </a>
             <span className="tooltip">Notifications</span>
           </li>
+          <li>
+            <a >
+              <span className="">Frontend</span>
+            </a>
+          </li>
         </ul>
+
       </div>
       <section className="home-section">{children}</section>
     </Grid>

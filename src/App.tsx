@@ -15,6 +15,7 @@ function App() {
   return (
     <div className="App">
       <Switch>
+        {/* //Open Routes  */}
         <Route exact path="/">
           <h1>Welcome to Blank Landing page.</h1>
           <Link to="/login">Click here</Link> to login
@@ -24,6 +25,7 @@ function App() {
         <Route path="/forgetpassword" component={ForgetPassword} />
         <Route path="/resetpassword/:token" component={ResetPassword} />
         <Route path="/ssologin/:token" component={SsoLogin} />
+        {/* Protected Routes  */}
         <ProtectedRoute path="/protected">
           <div> This is Home and protected too, protected tooo </div>
         </ProtectedRoute>
@@ -33,6 +35,8 @@ function App() {
         <ProtectedRoute path="/changepassword">
           <ChangePassword />
         </ProtectedRoute>
+        
+
       </Switch>
     </div>
   );

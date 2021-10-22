@@ -3,19 +3,12 @@ import React, { useState, useEffect } from 'react'
 import { Form } from 'react-bootstrap'
 import styled from "styled-components"
 import { setTimeout } from 'timers';
-// import Image from "../../image/avatar.jpg";
 // import Delete from "../../image/Delete.svg";
 
 
-function Profile() {
+function AddTeam() {
    type teamType = string[]
     const [fullname, setFullName] = useState('')
-    const [role, setRole] = useState('')
-    const [gender, setGender] = useState('')
-    const [location, setLocation] = useState('')
-    // const [location, setLocation] = useState('')
-    const [profileImage, setProfileImage] = useState('')
-    const [about, setAbout] = useState('')
     const [teams, setTeams] = useState<teamType>([])
     const [loading, setLoading] = useState(false)
     const [failed, setFailed] = useState("")
@@ -47,7 +40,7 @@ function Profile() {
         axios.request({
             url: "https://kojjac.herokuapp.com/",
             method: "post",
-            data: { profileImage },
+            data: { fullname },
             headers: {token:token!},
             withCredentials: true
         }).then((response: any) => {
@@ -69,7 +62,7 @@ function Profile() {
         axios.request({
         url: "https://kojjac.herokuapp.com/users/profile",
         method: "put",
-        data: { fullname, role, gender, location, about },
+        data: { fullname },
         headers: {token:token!},
         withCredentials: true
         }).then((response:any)=> {
@@ -134,7 +127,7 @@ function Profile() {
     )
 }
 
-export default Profile
+export default AddTeam
 
 const Wrapper = styled.div`
 margin-top: 5rem;
