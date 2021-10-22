@@ -19,11 +19,18 @@ import Profile from "../profile/Profile";
 import ChangePassword from "../changePassword/ChangePassword";
 import Teams from "../team/Teams";
 import { ProjectInterface, TeamInterface } from "../../Interfaces/interface";
-
+import AddProject from "../../components/AddaProjedct/AddaPrjedct"
 
 
 const useStyles = makeStyles(theme => ({
   modal: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+  }
+}));
+const useStylesProject = makeStyles(theme => ({
+  projectModal: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -40,6 +47,7 @@ const Home: FC<{}> = ({ children }) => {
   const [user, setUser] = useState<{ [key: string]: any }>({ name: "" });
   const history = useHistory();
   const [open, setOpen] = useState(false);
+  const [openProject, setOpenProject] = useState(false);
   const [imgUrl, setImgUrl] = useState("");
   const [toggle, setToggle] = useState(true);
   const [teams, setTeams] = useState<TeamInterface[]>();
@@ -112,17 +120,27 @@ const Home: FC<{}> = ({ children }) => {
   };
  
   const classes = useStyles();
+  const classe = useStylesProject();
   const handleOpen = () => {
       setOpen(true);
   };
+  const handleOpenProject = () => {
+    setOpenProject(true);
+};
+
 
   const handleClose = () => {
       setOpen(false);
   };
+  const handleCloseProject = () => {
+    setOpenProject(false);
+};
+  
 
   return loading ? (
     <h4>Loading... </h4>
   ) : (
+    <>
     <Grid>
       <div className="sidebar open">
         <div className="logo-details">
@@ -243,13 +261,36 @@ const Home: FC<{}> = ({ children }) => {
           })}
 
           <li>
-            <a href="#">
-              <span className="links_name" id="add">
-                {" "}
+           
+            <span className="tooltip">Notifications</span>
+          </li>
+          <li>
+          <a href="#">
+            <Button  onClick={handleOpenProject}>
+            <span className="links_name" id="add">
+               
                 +Add a Project
               </span>
+            </Button>
+            <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={classe.projectModal}
+                open={openProject}
+                onClose={handleCloseProject}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                    timeout: 500,
+                }}
+            >
+                <Fade in={openProject}>
+                    <div>
+<AddProject />
+                    </div>
+                </Fade>
+            </Modal>
             </a>
-            <span className="tooltip">Notifications</span>
           </li>
 
           <li>
@@ -324,6 +365,7 @@ const Home: FC<{}> = ({ children }) => {
         </Switch>
       </section>
     </Grid>
+    </>
   );
 };
 
