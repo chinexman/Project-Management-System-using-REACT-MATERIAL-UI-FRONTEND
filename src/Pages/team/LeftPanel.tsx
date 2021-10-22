@@ -17,8 +17,8 @@ const LeftPanel: FC<{ setDetail: Function }> = ({ setDetail }) => {
             {/* <div className="avatar">{el.image}</div> */}
             <Avatar alt="Remy Sharp" src={el.image} />
             <div className="profile_desc">
-              <div id="user_name">{el.name}</div>
-              <div className="job_title">{el.jobTitle}</div>
+              <h5 id="user_name">{el.name}</h5>
+              <p className="job_title">{el.jobTitle}</p>
             </div>
             <div className="taskNumber">
               <div className="taskNum">{`${el.task}`}</div>

@@ -1,6 +1,8 @@
 import React, { Fragment, useState, useEffect } from "react";
 import LeftPanel from "./LeftPanel";
 import RightPanel from "./RightPanel";
+// import "../index.css";
+import Home from "../Home/Home";
 import Header from "../../components/Header";
 import "./teamstyles.css";
 
@@ -22,7 +24,9 @@ const Teams = () => {
 
   return (
     <>
-      <Header header="Designers" headerlinks={headerlinks} />
+      <div className="headerWrapper">
+        <Header header="Designers" headerlinks={headerlinks} />
+      </div>
       <div className="wrapper">
         <div className="container">
           <LeftPanel setDetail={setDetail} />

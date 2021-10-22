@@ -12,6 +12,7 @@ import Profile from "../profile/Profile";
 import ChangePassword from "../changePassword/ChangePassword";
 import Teams from "../team/Teams";
 import { ProjectInterface, TeamInterface } from "../../Interfaces/interface";
+import File from "../filesPage/File";
 
 const Home: FC<{}> = ({ children }) => {
   console.log("renderi");
@@ -262,9 +263,12 @@ const Home: FC<{}> = ({ children }) => {
           <ProtectedRoute path="/changepassword">
             <ChangePassword />
           </ProtectedRoute>
-
           <ProtectedRoute path="/teams">
             <Teams />
+          </ProtectedRoute>
+
+          <ProtectedRoute path="/file">
+            <File />
           </ProtectedRoute>
         </Switch>
       </section>
