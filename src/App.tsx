@@ -24,15 +24,7 @@ function App() {
         <Route path="/forgetpassword" component={ForgetPassword} />
         <Route path="/resetpassword/:token" component={ResetPassword} />
         <Route path="/ssologin/:token" component={SsoLogin} />
-        <ProtectedRoute path="/protected">
-          <div> This is Home and protected too, protected tooo </div>
-        </ProtectedRoute>
-        <ProtectedRoute path="/profile">
-          <Profile />
-        </ProtectedRoute>
-        <ProtectedRoute path="/changepassword">
-          <ChangePassword />
-        </ProtectedRoute>
+        <Home />
       </Switch>
     </div>
   );

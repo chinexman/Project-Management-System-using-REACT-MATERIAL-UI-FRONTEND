@@ -87,9 +87,20 @@ function Login() {
             {loading ? "logging in...." : "Login"}{" "}
           </Button>
         </form>
-        <Link to="/forgetpassword" style={{ color: "blue" }}>
-          Forget password?
-        </Link>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginTop: "1rem",
+          }}
+        >
+          <Link to="/forgetpassword" style={{ color: "blue" }}>
+            Forget password?
+          </Link>
+          <Link to="/signup" style={{ color: "blue" }}>
+            Signup here?
+          </Link>
+        </div>
         {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
       </div>
 

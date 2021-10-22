@@ -3,7 +3,7 @@ import axios from "axios";
 import styled from "styled-components";
 import Logo from "../../Assets/logo.svg";
 import ErrorMessage from "./errorMessage";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { GoogleButton, FacebookButton, SSOWrapper } from "../signIn/Login";
 import { authContext } from "../../Utils/Authcontext";
 import CustomRedirect from "../../Utils/CustomRedirect";
@@ -101,9 +101,7 @@ function Signup() {
           </Button>
         </form>
 
-        <Button onClick={(e) => history.push("/login")}>
-          Go to login page
-        </Button>
+        <Link to="/login">Go to login page</Link>
       </div>
       <SSOWrapper>
         <a href="https://kojjac.herokuapp.com/users/google">

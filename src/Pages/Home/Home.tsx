@@ -5,7 +5,12 @@ import { Grid } from "../../components/Sidebar/sidebar.styles.";
 import Image from "../../Images/profile2.png";
 import Icon from "../../Assets/design.svg";
 import Logo from "../../Assets/logo.svg";
-import { useHistory } from "react-router";
+import { useHistory, Link } from "react-router-dom";
+import ProtectedRoute from "../../Utils/ProtectedRoute";
+import Switch from "react-bootstrap/esm/Switch";
+import Profile from "../profile/Profile";
+import ChangePassword from "../changePassword/ChangePassword";
+import Teams from "../team/Teams";
 
 const Home: FC<{}> = ({ children }) => {
   console.log("renderi");
@@ -15,7 +20,8 @@ const Home: FC<{}> = ({ children }) => {
   const [serverResponse, setResponse] = useState("");
   const [user, setUser] = useState<{ [key: string]: any }>({ name: "" });
   const history = useHistory();
-  const [toggle, setToggle] = useState(false);
+  const [imgUrl, setImgUrl] = useState("");
+  const [toggle, setToggle] = useState(true);
 
   useEffect(() => {
     axios
@@ -29,6 +35,11 @@ const Home: FC<{}> = ({ children }) => {
       .then((response) => {
         console.log(response);
         setUser(response.data.data);
+        setImgUrl(
+          response.data.data.profileImage
+            ? response.data.data.profileImage
+            : Image
+        );
         setLoading(false);
       })
       .catch((e) => {
@@ -55,7 +66,7 @@ const Home: FC<{}> = ({ children }) => {
     <h4>Loading... </h4>
   ) : (
     <Grid>
-      <div className="sidebar">
+      <div className="sidebar open">
         <div className="logo-details">
           <i className="bx bxl-c-plus-plus icon">
             <img
@@ -78,12 +89,23 @@ const Home: FC<{}> = ({ children }) => {
             <div className="profile-details">
               <img
                 style={{ borderRadius: "50%" }}
-                src={Image}
+                src={imgUrl}
                 alt="profileImg"
               />
               <div className="name_job">
-                <div className="name">{user.fullname}</div>
-                <div className="job" id="job">
+                <div
+                  className="name"
+                  onClick={(e) => history.push("/profile")}
+                  style={{ cursor: "pointer" }}
+                >
+                  {user.fullname}
+                </div>
+                <div
+                  className="job"
+                  style={{ cursor: "pointer" }}
+                  id="job"
+                  onClick={(e) => signOut()}
+                >
                   Logout
                 </div>
               </div>
@@ -119,9 +141,9 @@ const Home: FC<{}> = ({ children }) => {
             <span className="tooltip">Menu</span>
           </li>
           <li>
-            <a href="#">
+            <Link to="/profile">
               <span className="links_name">Home</span>
-            </a>
+            </Link>
             <span className="tooltip">Home</span>
           </li>
           <li>
@@ -138,7 +160,7 @@ const Home: FC<{}> = ({ children }) => {
           </li>
 
           <li>
-            <a href="#">
+            <a href="/teams">
               <span className="links_name" id="menu">
                 PROJECTS
               </span>
@@ -195,11 +217,11 @@ const Home: FC<{}> = ({ children }) => {
           </li>
 
           <li>
-            <a href="#">
+            <Link to="/teams">
               <span className="links_name" id="menu">
                 TEAMS
               </span>
-            </a>
+            </Link>
             <span className="tooltip">TEAMS</span>
           </li>
           <li>
@@ -231,7 +253,21 @@ const Home: FC<{}> = ({ children }) => {
           </li>
         </ul>
       </div>
-      <section className="home-section">{children}</section>
+      <section className="home-section">
+        <Switch>
+          <ProtectedRoute path="/profile">
+            <Profile />
+          </ProtectedRoute>
+
+          <ProtectedRoute path="/changepassword">
+            <ChangePassword />
+          </ProtectedRoute>
+
+          <ProtectedRoute path="/teams">
+            <Teams />
+          </ProtectedRoute>
+        </Switch>
+      </section>
     </Grid>
   );
 };
