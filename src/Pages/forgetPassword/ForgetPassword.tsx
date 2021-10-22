@@ -65,7 +65,7 @@ function ForgetPassword() {
           <label>
             <h3>Email Address</h3>
             <Input
-              type="text"
+              type="email"
               placeholder="Enter Email"
               value={email}
               name="email"

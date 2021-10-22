@@ -1,8 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
 import LeftPanel from "./LeftPanel";
 import RightPanel from "./RightPanel";
-// import "../index.css";
-import Home from "../Home/Home";
 import Header from "../../components/Header";
 import "./teamstyles.css";
 

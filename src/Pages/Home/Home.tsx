@@ -11,6 +11,7 @@ import Switch from "react-bootstrap/esm/Switch";
 import Profile from "../profile/Profile";
 import ChangePassword from "../changePassword/ChangePassword";
 import Teams from "../team/Teams";
+import { ProjectInterface, TeamInterface } from "../../Interfaces/interface";
 
 const Home: FC<{}> = ({ children }) => {
   console.log("renderi");
@@ -22,6 +23,8 @@ const Home: FC<{}> = ({ children }) => {
   const history = useHistory();
   const [imgUrl, setImgUrl] = useState("");
   const [toggle, setToggle] = useState(true);
+  const [teams, setTeams] = useState<TeamInterface[]>();
+  const [projects, setProjects] = useState<ProjectInterface[]>();
 
   useEffect(() => {
     axios
@@ -50,6 +53,32 @@ const Home: FC<{}> = ({ children }) => {
           history.push("/login");
         }
       });
+
+    //get projects
+
+    axios
+      .request<{ msg: string; projects: ProjectInterface[] }>({
+        url: backendUrl + "/projects/getproject",
+        headers: {
+          token: token as string,
+        },
+        method: "GET",
+      })
+      .then((response) => {
+        console.log(response);
+        setProjects(response.data.projects);
+        setLoading(false);
+      })
+      .catch((e) => {
+        setResponse(e.response.data.msg);
+        setLoading(false);
+        if (e.response.status === 401) {
+          signOut();
+        }
+      });
+
+    //get  teams
+    setTeams([]);
   }, []);
 
   const handleSignOut = () => {
@@ -160,54 +189,32 @@ const Home: FC<{}> = ({ children }) => {
           </li>
 
           <li>
-            <a href="/teams">
+            <Link to="/projects">
               <span className="links_name" id="menu">
                 PROJECTS
               </span>
-            </a>
+            </Link>
             <span className="tooltip">PROJECTS</span>
           </li>
-          <li>
-            <a href="#">
-              <img
-                style={{ width: "8%", height: "8%" }}
-                src={Icon}
-                alt="icon"
-              />
+          {projects?.map((project) => {
+            return (
+              <li>
+                <a href="#">
+                  <img
+                    style={{ width: "8%", height: "8%" }}
+                    src={Icon}
+                    alt="icon"
+                  />
 
-              <span className="links_name">Dashboard UI Kit</span>
-            </a>
-            <span className="tooltip">Dashboard UI Kit</span>
-          </li>
+                  <span className="links_name">{project.name}</span>
+                </a>
+                <span className="tooltip">{project.name}</span>
+              </li>
+            );
+          })}
+
           <li>
             <a href="#">
-              <img
-                style={{ width: "8%", height: "8%" }}
-                src={Icon}
-                alt="icon"
-              />
-              <span className="links_name">CRM System</span>
-            </a>
-            <span className="tooltip">CRM System</span>
-          </li>
-          <li>
-            <a href="#">
-              <img
-                style={{ width: "8%", height: "8%" }}
-                src={Icon}
-                alt="icon"
-              />
-              <span className="links_name">Website Redesign</span>
-            </a>
-            <span className="tooltip">Website Redesign</span>
-          </li>
-          <li>
-            <a href="#">
-              <img
-                style={{ width: "8%", height: "8%" }}
-                src={Icon}
-                alt="icon"
-              />
               <span className="links_name" id="add">
                 {" "}
                 +Add a Project
@@ -224,29 +231,22 @@ const Home: FC<{}> = ({ children }) => {
             </Link>
             <span className="tooltip">TEAMS</span>
           </li>
-          <li>
-            <a href="#">
-              <span className="links_name">Designers</span>
-            </a>
-            <span className="tooltip">Designers</span>
-          </li>
-          <li>
-            <a href="#">
-              <span className="links_name">Backend</span>
-            </a>
-            <span className="tooltip">Backend</span>
-          </li>
-          <li>
-            <a href="#">
-              <span className="links_name">Frontend</span>
-            </a>
-            <span className="tooltip">Frontend</span>
-          </li>
+
+          {teams?.map((team) => {
+            return (
+              <li>
+                <a href="#">
+                  <span className="links_name">{team.name}</span>
+                </a>
+                <span className="tooltip">{team.name}</span>
+              </li>
+            );
+          })}
           <li>
             <a href="#">
               <span className="links_name" id="add">
                 {" "}
-                +Add a Project
+                +Add Team
               </span>
             </a>
             <span className="tooltip">Notifications</span>
