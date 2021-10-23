@@ -20,6 +20,7 @@ import ChangePassword from "../changePassword/ChangePassword";
 import Teams from "../team/Teams";
 import { ProjectInterface, TeamInterface } from "../../Interfaces/interface";
 import AddProject from "../../components/AddaProjedct/AddaPrjedct"
+import Demo from "../../Assets/demo.svg";
 
 
 const useStyles = makeStyles(theme => ({
@@ -189,6 +190,7 @@ const Home: FC<{}> = ({ children }) => {
             <i className="bx bx-log-out" id="log_out"></i>
           </li>
           <li>
+            <li><img src= {Demo} alt= "demo"/></li>
             <i className="bx bx-search">
               <svg
                 width="16"

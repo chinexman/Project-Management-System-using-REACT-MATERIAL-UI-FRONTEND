@@ -67,7 +67,8 @@ function AddProject() {
         <div>
             <Wrapper>
                 <div className ="name">
-
+                <h1>Add a New Project</h1>
+            <BorderBottom />
                 </div>
               <Form className = "profileForm" onSubmit={submitHandler}>
                   <label>
@@ -122,11 +123,13 @@ display: flex;
 justify-content: center;
 align-items: center;
 flex-direction: column;
+border-radius:10px;
 .profileForm{
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+   
 }
 
 .button{
@@ -198,3 +201,8 @@ border-radius: 10px;
 margin: 10px 0;
 font-size: 1rem;
 `
+export const BorderBottom = styled.div`
+  margin: 40px 0px;
+  border-bottom: 1px solid #ececec; ;
+  width: 45vw;
+`;
