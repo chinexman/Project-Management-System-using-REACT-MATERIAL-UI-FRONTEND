@@ -35,8 +35,14 @@
   border-bottom: 1px solid grey;
 }
 .UploadBy {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
+  border-radius: 20px;
+  width: 150px;
+}
+.image {
+  clip-path: circle();
+  width: 30px;
+  height: 20px;
+}
+
+.UploadBy {
 }

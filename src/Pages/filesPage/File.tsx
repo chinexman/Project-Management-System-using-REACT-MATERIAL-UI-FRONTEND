@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { FiDownload } from "react-icons/fi";
 import { BsSearch } from "react-icons/bs";
 import { AiFillFile } from "react-icons/ai";
@@ -152,33 +152,34 @@ let columns = [
 ];
 
 export default function File() {
-  const [Files, setFiles] = useState([...files]);
+  const [Files, setFiles] = useState<{ [key: string]: any }>([]);
   // const [onlineFiles, setonlineFiles]= useState([]);
 
   const { token } = useContext(authContext);
 
-  const getAllFiles = async () => {
-    console.log("i am click");
-    console.log(token);
-    await axios
+  useEffect(() => {
+    axios
       .request({
-        url: "https://kojjac.herokuapp.com/tasks/getFiles/61721457b22adb3e31445534",
+        url: "https://kojjac.herokuapp.com/tasks/allFiles/61721457b22adb3e31445534",
+
         // url: "https://kojjac.herokuapp.com/tasks/allFiles",
+
         method: "get",
+
         headers: { token: token! },
-        withCredentials: true,
       })
       .then((response) => {
         return response.data;
       })
       .then((data: any) => {
-        console.log(data);
+        console.log(data.data);
+
         setFiles(data.data);
       })
       .catch((e) => {
         console.log(e.response);
       });
-  };
+  }, []);
 
   let style = {
     width: "2%",
@@ -213,7 +214,7 @@ export default function File() {
 
             <tbody className="body">
               {Files.length === 0 && <h1>there are no files availab</h1>}
-              {Files.map((row) => (
+              {Files.map((row: any) => (
                 <tr key={row._id} className="row">
                   <td>
                     {}
@@ -222,12 +223,13 @@ export default function File() {
                     </h4>
                   </td>
                   <td className="name">{row.name}</td>
-                  <td className="size">{row.size}</td>
+                  <td className="size">{row.fileSize}</td>
                   <td className="UploadBy">
-                    <Image /> {row.UploadBy}
+                    <img className="image" src={row.uploadedBy.profileImage} />
+                    {row.uploadedBy.fullname}
                   </td>
-                  <td className="Tag">{row.Tag}</td>
-                  <td className="Date">{row.Date}</td>
+                  <td className="Tag">{row.Tag || "Tag"}</td>
+                  <td className="Date">{row.uploadedOn}</td>
                   <td>
                     <button
                       className="button"
@@ -248,7 +250,7 @@ export default function File() {
               ))}
             </tbody>
           </table>
-          <button onClick={getAllFiles}> get file</button>
+          {/* <button onClick={getAllFiles}> get file</button> */}
         </div>
 
         {/* </div> */}

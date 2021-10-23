@@ -46,6 +46,7 @@ function Login() {
       })
       .catch((error) => {
         console.log(error.response);
+        setError(error.response.data.msg);
         setLoading(false);
       });
   };
@@ -54,7 +55,6 @@ function Login() {
     <CustomRedirect />
   ) : (
     <Wrapper>
-      {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
       <div className="login">
         <img className="logo" src={Logo} alt="Login" />
         <BorderBottom />

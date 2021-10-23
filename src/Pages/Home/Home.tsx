@@ -177,9 +177,9 @@ const Home: FC<{}> = ({ children }) => {
             <span className="tooltip">Home</span>
           </li>
           <li>
-            <a href="#">
+            <Link to="/file">
               <span className="links_name">My Tasks</span>
-            </a>
+            </Link>
             <span className="tooltip">My Tasks</span>
           </li>
           <li>

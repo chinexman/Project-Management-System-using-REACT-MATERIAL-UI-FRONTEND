@@ -14,6 +14,7 @@ export default function ChangePassword() {
   const [repeatPassword, setRepeatPassword] = useState("");
   const { token } = useContext(authContext);
   const history = useHistory();
+  const [status, setStatus] = useState("");
 
   const submitHandler = async (e: any) => {
     e.preventDefault();
@@ -35,10 +36,11 @@ export default function ChangePassword() {
           withCredentials: true,
         })
         .then((response) => {
-          alert(response.data);
+          // alert(response.data.)
+          setStatus("Password changed successfully");
         });
     } catch (error: any) {
-      console.log(error.response);
+      setStatus(error.response.data.message);
     }
   };
   return (
@@ -80,6 +82,7 @@ export default function ChangePassword() {
                 required
               />
             </label>
+            <div style={{ color: "red" }}>{status}</div>
             <ChangePasswordButton>Change Password</ChangePasswordButton>
             <CancelButton onClick={(e) => history.push("/profile")}>
               Cancel
