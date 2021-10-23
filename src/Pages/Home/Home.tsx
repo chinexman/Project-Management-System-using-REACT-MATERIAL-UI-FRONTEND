@@ -21,7 +21,7 @@ import Teams from "../team/Teams";
 import { ProjectInterface, TeamInterface } from "../../Interfaces/interface";
 import AddProject from "../../components/AddaProjedct/AddaPrjedct"
 import Demo from "../../Assets/demo.svg";
-
+import File from "../filesPage/File";
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -37,6 +37,7 @@ const useStylesProject = makeStyles(theme => ({
       justifyContent: 'center',
   }
 }));
+
 
 
 const Home: FC<{}> = ({ children }) => {
@@ -225,9 +226,9 @@ const Home: FC<{}> = ({ children }) => {
             <span className="tooltip">Home</span>
           </li>
           <li>
-            <a href="#">
+            <Link to="/file">
               <span className="links_name">My Tasks</span>
-            </a>
+            </Link>
             <span className="tooltip">My Tasks</span>
           </li>
           <li>
@@ -360,9 +361,12 @@ const Home: FC<{}> = ({ children }) => {
           <ProtectedRoute path="/changepassword">
             <ChangePassword />
           </ProtectedRoute>
-
           <ProtectedRoute path="/teams">
             <Teams />
+          </ProtectedRoute>
+
+          <ProtectedRoute path="/file">
+            <File />
           </ProtectedRoute>
         </Switch>
       </section>

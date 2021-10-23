@@ -27,7 +27,8 @@ const RightPanel: FC<{ name: String; jobtitle: String }> = ({
 
         <div className="profiles">
           <div className="img_container">
-            <img src={imgUrl} alt="" className="image_url" />
+            {/* <img src={imgUrl} alt="" className="image_url" /> */}
+            <i className="fas fa-user-alt"></i>
           </div>
           <div className="profileSmallwrap">
             <div className="personalDetails">
@@ -36,11 +37,12 @@ const RightPanel: FC<{ name: String; jobtitle: String }> = ({
               <p className="country">Nigeria</p>
             </div>
             <p className="right_side_dots">
-              <img src={Image} alt="option icon" />
+              {/* <img src={Image} alt="option icon" /> */}
+              <i className="fas fa-ellipsis-h"></i>
             </p>
           </div>
         </div>
-        <hr />
+        <hr className="horizontal" />
         <div className="taskleveldiagram">
           <div className="close_task">
             <p>
@@ -58,7 +60,7 @@ const RightPanel: FC<{ name: String; jobtitle: String }> = ({
           {/* <div className="green_diagram">green diagram</div> */}
         </div>
 
-        <hr />
+        <hr className="horizontal" />
 
         <div className="assignedTask">
           <div className="task_assign_no">
@@ -90,8 +92,8 @@ const RightPanel: FC<{ name: String; jobtitle: String }> = ({
           </div>
         </div>
 
-        <hr />
-        <h5>Last Activity</h5>
+        <hr className="horizontal" />
+        <h5 className="lastActivityHeader">Last Activity</h5>
         <div className="lastactivitywrapper">
           <div className="lastactivity">
             <div className="lastactivityicon">
@@ -112,13 +114,13 @@ const RightPanel: FC<{ name: String; jobtitle: String }> = ({
           </div>
           <div className="lastactivityimages">
             <div className="LA_img_container">
-              <img src={imgUrl} alt="" className="ji" />
+              {/* <img src={imgUrl} alt="" className="LA_img_container_item" /> */}
             </div>
             <div className="LA_img_container">
-              <img src={imgUrl} alt="" className="ji" />
+              {/* <img src={imgUrl} alt="" className="LA_img_container_item" /> */}
             </div>
             <div className="LA_img_container">
-              <img src={imgUrl} alt="" className="ji" />
+              {/* <img src={imgUrl} alt="" className="LA_img_container_item" /> */}
             </div>
           </div>
           <div className="lastactivity">
