@@ -137,7 +137,7 @@ const Profile: FC<{ setNavDisplayPicture: (a: string) => void }> = ({
     },
   ];
   return (
-    <>
+    <div style={{ maxHeight: "100vh" }}>
       <Header header="Profile Settings" headerlinks={headerlinks}></Header>
       <Wrapper>
         <div className="image">
@@ -208,23 +208,26 @@ const Profile: FC<{ setNavDisplayPicture: (a: string) => void }> = ({
           </p>
         </Form>
       </Wrapper>
-    </>
+    </div>
   );
 };
 export default Profile;
 const Wrapper = styled.div`
-  margin-top: 5rem;
-  padding-top: 1rem;
+  margin-top: 2rem;
+  padding-top: 100px;
   padding-bottom: 1rem;
   width: 49vw;
   min-width: 400px;
-  /* height: 90vh; */
+  max-height: 85vh;
   background-color: #ffffff;
   margin: 20px auto;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  overflow-y: auto;
+  margin-bottom: 50px;
+  padding-bottom: 80px;
   .profileForm {
     display: flex;
     flex-direction: column;

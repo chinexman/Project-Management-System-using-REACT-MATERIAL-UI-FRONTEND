@@ -46,7 +46,7 @@ export const Links = styled.ul`
 `;
 export const ChangePasswordTopbarWrap = styled.div`
   width: 100%;
-  height: 136px;
+  height: 120px;
   background-color: #ffffff;
   .header {
     padding: 20px;

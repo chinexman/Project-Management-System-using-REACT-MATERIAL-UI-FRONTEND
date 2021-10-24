@@ -298,7 +298,7 @@ const Home: FC<{}> = ({ children }) => {
                 <Modal
                   aria-labelledby="transition-modal-title"
                   aria-describedby="transition-modal-description"
-                  className={classe.projectModal}
+                  className={classes.modal}
                   open={openTask}
                   onClose={handleCloseTask}
                   closeAfterTransition

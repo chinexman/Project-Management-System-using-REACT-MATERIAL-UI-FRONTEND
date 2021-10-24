@@ -3,6 +3,7 @@ import { FC, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Header from "../../components/Header";
+import TaskDescription from "./TaskDescription";
 
 export const DisplayTask: FC<{ setOpenTask: Function }> = ({ setOpenTask }) => {
   const headerlinks = [
@@ -13,46 +14,48 @@ export const DisplayTask: FC<{ setOpenTask: Function }> = ({ setOpenTask }) => {
     { name: "Files", link: "/file" },
   ];
 
-  const [openTaskModal, setTaskModal] = useState(false);
   return (
     <div>
       <Header header="PROJECT PRIMUS" headerlinks={headerlinks} />
-      <DisplayTaskContainer>
-        {/* Display tasks in backlog */}
-        <TaskCardGroup title={"Backlog"} setOpenTask={setOpenTask}>
-          <DisplayTaskCard
-            title="E-mail after registration so that I can confirm my address"
-            tag="Development"
-          />
-          <DisplayTaskCard
-            title="E-mail after registration so that I can confirm my address"
-            tag="Design"
-          />
-        </TaskCardGroup>
+      <div style={{ display: "flex" }}>
+        <DisplayTaskContainer>
+          {/* Display tasks in backlog */}
+          <TaskCardGroup title={"Backlog"} setOpenTask={setOpenTask}>
+            <DisplayTaskCard
+              title="E-mail after registration so that I can confirm my address"
+              tag="Development"
+            />
+            <DisplayTaskCard
+              title="E-mail after registration so that I can confirm my address"
+              tag="Design"
+            />
+          </TaskCardGroup>
 
-        <TaskCardGroup title={"Todo"} setOpenTask={setOpenTask}>
-          <DisplayTaskCard
-            title="E-mail after registration so that I can confirm my address"
-            tag="Product"
-          />
-          <DisplayTaskCard
-            title="E-mail after registration so that I can confirm my address"
-            tag="UI/UX"
-          />
-        </TaskCardGroup>
+          <TaskCardGroup title={"Todo"} setOpenTask={setOpenTask}>
+            <DisplayTaskCard
+              title="E-mail after registration so that I can confirm my address"
+              tag="Product"
+            />
+            <DisplayTaskCard
+              title="E-mail after registration so that I can confirm my address"
+              tag="UI/UX"
+            />
+          </TaskCardGroup>
 
-        <TaskCardGroup title={"Done"} setOpenTask={setOpenTask}>
-          <DisplayTaskCard
-            title="E-mail after registration so that I can confirm my address"
-            tag="Product"
-          />
-          <DisplayTaskCard
-            title="E-mail after registration so that I can confirm my address"
-            tag="Development"
-            avatarUrl="https://res.cloudinary.com/projectmanagementgroupb/image/upload/v1634869516/vjjkzu5pxvy3n0sylgua.jpg"
-          />
-        </TaskCardGroup>
-      </DisplayTaskContainer>
+          <TaskCardGroup title={"Done"} setOpenTask={setOpenTask}>
+            <DisplayTaskCard
+              title="E-mail after registration so that I can confirm my address"
+              tag="Product"
+            />
+            <DisplayTaskCard
+              title="E-mail after registration so that I can confirm my address"
+              tag="Development"
+              avatarUrl="https://res.cloudinary.com/projectmanagementgroupb/image/upload/v1634869516/vjjkzu5pxvy3n0sylgua.jpg"
+            />
+          </TaskCardGroup>
+        </DisplayTaskContainer>
+        <TaskDescription />
+      </div>
     </div>
   );
 };
@@ -60,6 +63,7 @@ export const DisplayTask: FC<{ setOpenTask: Function }> = ({ setOpenTask }) => {
 const DisplayTaskCard: FC<{ title: string; tag: string; avatarUrl?: string }> =
   ({ title, tag, avatarUrl = "" }) => {
     const tagColorAndBg = generateRandomFontColor();
+
     return (
       <CardBody custom_background={generateRandomHexColor()}>
         <div style={{ display: "flex", margin: " 10px 0" }}>
@@ -112,7 +116,7 @@ const TaskCardGroup: FC<{ title: string; setOpenTask: Function }> = ({
 };
 
 function generateRandomHexColor() {
-  const colors = ["#F7F6F3", "#FFF8DD", "#F7F6F3"];
+  const colors = ["#F7F6F3", "#FFF8DD", "#EAEAEA"];
   const randomIndex = Math.floor(Math.random() * colors.length + 0);
   return colors[randomIndex];
 }
@@ -130,9 +134,9 @@ function generateRandomFontColor() {
 
 const DisplayTaskContainer = styled.div`
   background-color: white;
-  max-width: 50% !important;
+  max-width: 40% !important;
   padding: 30px;
-  max-height: 100vh;
+  max-height: 85vh;
   margin-top: 5px;
   margin-bottom: 50px;
   overflow-y: auto;
@@ -158,7 +162,6 @@ const TaskCardGroupBody = styled.div`
 `;
 const AddTaskDiv = styled.div`
   background-color: #cef9c6;
-
   border-radius: 20px;
   padding: 15px 25px;
   font-weight: bold;
