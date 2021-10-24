@@ -1,28 +1,23 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from "axios";
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  useRef,
-  ChangeEvent,
-} from "react";
+import React, { useState, useEffect, useContext, ChangeEvent, FC } from "react";
 import { Form } from "react-bootstrap";
 import styled from "styled-components";
 import { setTimeout } from "timers";
-import Header from "../../components/Header";
 import Image from "../../Images/avatar.jpg";
 import Delete from "../../Images/Delete.svg";
 import { authContext } from "../../Utils/Authcontext";
 import Home from "../Home/Home";
-function Profile() {
+import Header from "../../components/Header";
+const Profile: FC<{ setNavDisplayPicture: (a: string) => void }> = ({
+  setNavDisplayPicture,
+}) => {
   type teamType = string[];
   const [fullname, setFullName] = useState("");
   const [role, setRole] = useState("");
   const [gender, setGender] = useState("");
   const [location, setLocation] = useState("");
-  // const [location, setLocation] = useState('')
-  // const profileImgInput= useRef<HTMLInputElement>(null)
+
   const [profileImage, setProfileImage] = useState<File>();
   const [profileImgUrl, setProfileImgUrl] = useState("");
   const [about, setAbout] = useState("");
@@ -61,6 +56,7 @@ function Profile() {
         setLocation(response.data.data.location);
         setAbout(response.data.data.about);
         setProfileImgUrl(response.data.data.profileImage);
+
         console.log(response.data.data);
       })
       .catch((err) => {
@@ -103,23 +99,6 @@ function Profile() {
         setFailed(err.response.data.messsage);
         console.log(err.response);
       });
-    //  axios
-    // .request({
-    //   url: "https://kojjac.herokuapp.com/users/uploadProfile",
-    //   method: "post",
-    //   data: { profileImage },
-    //   headers: { token: token! },
-    //   withCredentials: true,
-    // })
-    // .then((response: any) => {
-    //   setLoading(false);
-    //   setFailed("Updated successfully");
-    //   console.log(response);
-    // })
-    // .catch((err) => {
-    //   setFailed(err.response.data.messsage);
-    //   console.log(err.response);
-    // });
   };
   function handleImgChange(e: ChangeEvent<HTMLInputElement>) {
     setProfileImage(e.target.files![0]);
@@ -137,8 +116,9 @@ function Profile() {
       })
       .then((response: any) => {
         setLoading(false);
-        console.log("Change PicFile says: ", response);
+        // console.log("Change PicFile says: ", response);
         setProfileImgUrl(response.data.data.profileImage);
+        setNavDisplayPicture(response.data.data.profileImage);
       })
       .catch((err) => {
         setFailed(err.response.data.messsage);
@@ -230,7 +210,7 @@ function Profile() {
       </Wrapper>
     </>
   );
-}
+};
 export default Profile;
 const Wrapper = styled.div`
   margin-top: 5rem;

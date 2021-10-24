@@ -5,9 +5,11 @@ import styled from "styled-components";
 import { setTimeout } from "timers";
 // import Delete from "../../image/Delete.svg";
 
-function AddProject() {
+function AddTask() {
   type teamType = string[];
-  const [fullname, setFullName] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [assignee, setAssignee] = useState("");
   const [Projects, setProjects] = useState<teamType>([]);
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState("");
@@ -25,18 +27,12 @@ function AddProject() {
         withCredentials: true,
       })
       .then((response: any) => {
-        setFullName(response.data.data.fullname);
-
         console.log(response.data.data);
       })
       .catch((err) => {
         console.log(err.response);
       });
   }, []);
-
-  const leaveTeamFunc = () => {
-    //this should prompt the leave-team end-point
-  };
 
   const submitHandler = (e: any) => {
     e.preventDefault();
@@ -46,7 +42,7 @@ function AddProject() {
       .request({
         url: "https://kojjac.herokuapp.com/",
         method: "post",
-        data: { fullname },
+        data: { title, description, assignee },
         headers: { token: token! },
         withCredentials: true,
       })
@@ -66,39 +62,42 @@ function AddProject() {
     <div>
       <Wrapper>
         <div className="name">
-          <h1>Add a New Project</h1>
+          <h1>Add a New Task</h1>
           <BorderBottom />
         </div>
         <Form className="profileForm" onSubmit={submitHandler}>
           <label>
-            <h3> Name </h3>
+            <h3> Title </h3>
             <Input
-              value={fullname}
-              onChange={(e) => setFullName(e.target.value)}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               type=" text"
-              placeholder="Enter name"
+              placeholder="Title of task"
             />
           </label>
 
           <label>
-            <h3> Projects </h3>
-            <div className="Projects-input">
-              {Projects.map((team, index) => {
-                return (
-                  <>
-                    <div className="team-div">
-                      <div key={index} className="team-tag">
-                        {team}
-                      </div>
-                    </div>
-                  </>
-                );
-              })}
-            </div>
+            <h3> Description </h3>
+            <Input
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              type=" text"
+              placeholder="Description of task"
+            />
+          </label>
+
+          <label>
+            <h3> Assignee </h3>
+            <Select name="assignee">
+              <option value="3223hdfh34">Kayode Odole</option>
+              <option value="3223hdfh34">Jennifer Isintume</option>
+              <option value="3223hdfh34">Muazu Abu</option>
+              <option value="3223hdfh34">Jahswill Apata</option>
+            </Select>
           </label>
 
           <button disabled={loading} type="submit" className="button">
-            {loading ? "Loading" : "Create Project"}
+            {loading ? "Loading" : "Create Task"}
           </button>
           {/* {failed ? <strong className="failure-tag">Failed to update</strong> :  <strong className="failure-tag">Update successful</strong>} */}
           <p>{failed}</p>
@@ -108,7 +107,7 @@ function AddProject() {
   );
 }
 
-export default AddProject;
+export default AddTask;
 
 const Wrapper = styled.div`
   margin-top: 5rem;
@@ -194,6 +193,18 @@ const Input = styled.input`
   height: 6vh;
   min-height: 6vh;
   padding: 1rem;
+  background-color: var(--lightGrey-background);
+  border: none;
+  border-radius: 10px;
+  margin: 10px 0;
+  font-size: 1rem;
+`;
+
+const Select = styled.select`
+  width: 40vw;
+  min-width: 300px;
+  height: 6vh;
+  min-height: 6vh;
   background-color: var(--lightGrey-background);
   border: none;
   border-radius: 10px;
