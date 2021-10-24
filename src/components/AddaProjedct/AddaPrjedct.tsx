@@ -7,7 +7,7 @@ import { setTimeout } from "timers";
 
 function AddProject() {
   type teamType = string[];
-  const [fullname, setFullName] = useState("");
+  const [projectName, setprojectName] = useState("");
   const [Projects, setProjects] = useState<teamType>([]);
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState("");
@@ -25,7 +25,7 @@ function AddProject() {
         withCredentials: true,
       })
       .then((response: any) => {
-        setFullName(response.data.data.fullname);
+        setprojectName(response.data.data.projectName);
 
         console.log(response.data.data);
       })
@@ -46,18 +46,18 @@ function AddProject() {
       .request({
         url: "https://kojjac.herokuapp.com/",
         method: "post",
-        data: { fullname },
+        data: { projectname: projectName },
         headers: { token: token! },
         withCredentials: true,
       })
-      .then((response: any) => {
+      .then((response) => {
         setLoading(false);
         setFailed("Updated successfully");
-
-        console.log(response);
+        console.log("Success:", response.data);
       })
       .catch((err) => {
         setFailed(err.response.data.messsage);
+        alert("Unable to create project.");
         console.log(err.response);
       });
   };
@@ -73,14 +73,14 @@ function AddProject() {
           <label>
             <h3> Name </h3>
             <Input
-              value={fullname}
-              onChange={(e) => setFullName(e.target.value)}
+              value={projectName}
+              onChange={(e) => setprojectName(e.target.value)}
               type=" text"
               placeholder="Enter name"
             />
           </label>
 
-          <label>
+          {/* <label>
             <h3> Projects </h3>
             <div className="Projects-input">
               {Projects.map((team, index) => {
@@ -95,7 +95,7 @@ function AddProject() {
                 );
               })}
             </div>
-          </label>
+          </label> */}
 
           <button disabled={loading} type="submit" className="button">
             {loading ? "Loading" : "Create Project"}

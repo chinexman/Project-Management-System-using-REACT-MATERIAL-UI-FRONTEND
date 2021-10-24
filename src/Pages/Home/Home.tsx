@@ -24,6 +24,8 @@ import Demo from "../../Assets/demo.svg";
 import File from "../filesPage/File";
 import { DisplayTask } from "../task/DisplayTask";
 import AddTask from "../task/AddTask";
+import Activity from "../activityPage/Activity";
+import Homepage from "../Home_page/Homepage";
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
@@ -221,13 +223,13 @@ const Home: FC<{}> = ({ children }) => {
               <span className="tooltip">Menu</span>
             </li>
             <li>
-              <Link to="/profile">
+              <Link to="/home">
                 <span className="links_name">Home</span>
               </Link>
               <span className="tooltip">Home</span>
             </li>
             <li>
-              <Link to="/file">
+              <Link to="/tasks">
                 <span className="links_name">My Tasks</span>
               </Link>
               <span className="tooltip">My Tasks</span>
@@ -240,7 +242,7 @@ const Home: FC<{}> = ({ children }) => {
             </li>
 
             <li>
-              <Link to="/project-tasks">
+              <Link to="#">
                 <span className="links_name" id="menu">
                   PROJECTS
                 </span>
@@ -377,6 +379,9 @@ const Home: FC<{}> = ({ children }) => {
               <Profile setNavDisplayPicture={setImgUrl} />
             </ProtectedRoute>
 
+            <ProtectedRoute path="/home">
+              <Homepage />
+            </ProtectedRoute>
             <ProtectedRoute path="/changepassword">
               <ChangePassword />
             </ProtectedRoute>
@@ -388,8 +393,12 @@ const Home: FC<{}> = ({ children }) => {
               <File />
             </ProtectedRoute>
 
-            <ProtectedRoute path="/project-tasks">
+            <ProtectedRoute path="/tasks">
               <DisplayTask setOpenTask={setOpenTask} />
+            </ProtectedRoute>
+
+            <ProtectedRoute path="/activity">
+              <Activity />
             </ProtectedRoute>
           </Switch>
         </section>
