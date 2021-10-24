@@ -71,7 +71,7 @@ export const Grid = styled.div`
     margin-top: 15%;
   }
   #job {
-    color:     color: #878787;;
+    color: #878787;
     margin-top: 5%;
   }
   #menu:hover {

@@ -22,6 +22,7 @@ import { ProjectInterface, TeamInterface } from "../../Interfaces/interface";
 import AddProject from "../../components/AddaProjedct/AddaPrjedct"
 import Demo from "../../Assets/demo.svg";
 import File from "../filesPage/File";
+import Kanban from "../Kanban/Kanban";
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -385,7 +386,12 @@ const Home: FC<{}> = ({ children }) => {
           <ProtectedRoute path="/file">
             <File />
           </ProtectedRoute>
+
+          <ProtectedRoute path="/kanban">
+            <Kanban/>
+          </ProtectedRoute>
         </Switch>
+        
       </section>
     </Grid>
     </>
