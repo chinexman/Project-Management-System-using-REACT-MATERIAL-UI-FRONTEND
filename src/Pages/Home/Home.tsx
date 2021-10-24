@@ -2,7 +2,7 @@ import { authContext } from "../../Utils/Authcontext";
 import { useContext, useEffect, useState, FC } from "react";
 import {Link} from "react-router-dom"
 import axios from "axios";
-import { Grid } from "../../components/Sidebar/sidebar.styles.";
+import { Grid, Statistics } from "../../components/Sidebar/sidebar.styles.";
 import Image from "../../Images/profile2.png";
 import Icon from "../../Assets/design.svg";
 import Logo from "../../Assets/logo.svg";
@@ -145,6 +145,7 @@ const Home: FC<{}> = ({ children }) => {
     <>
     <Grid>
       <div className="sidebar open">
+        {/* LOGO AND HANDBURER */}
         <div className="logo-details">
           <i className="bx bxl-c-plus-plus icon">
             <img
@@ -180,18 +181,34 @@ const Home: FC<{}> = ({ children }) => {
                 </div>
                 <div
                   className="job"
-                  style={{ cursor: "pointer" }}
                   id="job"
-                  onClick={(e) => signOut()}
                 >
-                  Logout
+                 Product Owner
                 </div>
               </div>
+              <i style={{color:'#878787'}} className="fas fa-ellipsis-h"></i>
             </div>
             <i className="bx bx-log-out" id="log_out"></i>
           </li>
+          {/* Statistics */}
           <li>
-            <li><img src= {Demo} alt= "demo"/></li>
+              <Statistics className="stats">
+                <div className="stats__left">
+                  <h1>
+                    372
+                  </h1>
+                <p id="tag">completed Tasks</p>
+                </div>
+                <div className="stats__right">
+                  <h1>
+                    11
+                  </h1>
+                <p id="tag">Open Taks</p>
+                </div>
+              </Statistics>
+            </li>
+            {/* Search BAR */}
+          <li>
             <i className="bx bx-search">
               <svg
                 width="16"
@@ -211,6 +228,9 @@ const Home: FC<{}> = ({ children }) => {
             </i>
             <input type="text" placeholder="Search..." />
           </li>
+
+          {/* Statistics  */}
+          
           <li>
             <a href="#">
               <span className="links_name" id="menu">
@@ -342,13 +362,10 @@ const Home: FC<{}> = ({ children }) => {
                 </Fade>
             </Modal>
             </a>
-            <span className="tooltip">Notifications</span>
           </li>
-          <li>
-            <a >
-              <span className="">Frontend</span>
-            </a>
-          </li>
+<div id="invite__container">
+            <span className="invite__text"><Link id="invite" to="#">Invite your team </Link><span id= "collaborate">and start collaborating</span></span>
+        </div>
         </ul>
 
       </div>

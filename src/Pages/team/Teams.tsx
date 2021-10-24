@@ -25,7 +25,7 @@ const Teams = () => {
   return (
     <>
       <div className="headerWrapper">
-        <Header header="Designers" headerlinks={headerlinks} />
+        <Header header="Designers" signOut="SignOut" headerlinks={headerlinks} />
       </div>
       <div className="wrapper">
         <div className="container">

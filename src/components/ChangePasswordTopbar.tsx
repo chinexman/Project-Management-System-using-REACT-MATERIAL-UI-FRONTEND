@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 export default function ChangePasswordTopbar() {
   return (
-    <ChangePasswordTopbarWrap>
+    <ChangePasswordTopbarWrap >
       <div className="header">
         <h1>Change Password</h1>
       </div>

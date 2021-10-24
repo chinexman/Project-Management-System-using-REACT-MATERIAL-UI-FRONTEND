@@ -103,23 +103,6 @@ function Profile() {
         setFailed(err.response.data.messsage);
         console.log(err.response);
       });
-    //  axios
-    // .request({
-    //   url: "https://kojjac.herokuapp.com/users/uploadProfile",
-    //   method: "post",
-    //   data: { profileImage },
-    //   headers: { token: token! },
-    //   withCredentials: true,
-    // })
-    // .then((response: any) => {
-    //   setLoading(false);
-    //   setFailed("Updated successfully");
-    //   console.log(response);
-    // })
-    // .catch((err) => {
-    //   setFailed(err.response.data.messsage);
-    //   console.log(err.response);
-    // });
   };
   function handleImgChange(e: ChangeEvent<HTMLInputElement>) {
     setProfileImage(e.target.files![0]);
@@ -158,7 +141,7 @@ function Profile() {
   ];
   return (
     <>
-      <Header header="Profile Settings" headerlinks={headerlinks}></Header>
+      <Header header="Profile Settings" signOut= "signOut" headerlinks={headerlinks}></Header>
       <Wrapper>
         <div className="image">
           {/* <div onClick={changePic} className="change-pic-div">change</div> */}
