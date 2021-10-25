@@ -1,9 +1,13 @@
 import styled from "styled-components";
-import { FC, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Header from "../../components/Header";
 import TaskDescription from "./TaskDescription";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { TaskInterface } from "../../Interfaces/interface";
+import { authContext } from "../../Utils/Authcontext";
 
 export const DisplayTask: FC<{ setOpenTask: Function }> = ({ setOpenTask }) => {
   const headerlinks = [
@@ -13,6 +17,66 @@ export const DisplayTask: FC<{ setOpenTask: Function }> = ({ setOpenTask }) => {
     { name: "Calendar", link: "/calendar" },
     { name: "Files", link: "/file" },
   ];
+  const { projectId } = useParams<{ projectId: string }>();
+  const [backlogs, setBacklogs] = useState<TaskInterface[]>([]);
+  const [todos, setTodos] = useState<TaskInterface[]>([]);
+  const [done, setDone] = useState<TaskInterface[]>([]);
+  const [loading, setLoading] = useState(false);
+  const { token } = useContext(authContext);
+
+  useEffect(() => {
+    //get task with backlog status
+    axios
+      .request<{ tasks: TaskInterface[] }>({
+        url: `${
+          process.env.REACT_APP_BACKEND_URL as string
+        }/tasks/getTasks/${token}/backlog`,
+        headers: { token: token! },
+        method: "get",
+      })
+      .then((response) => {
+        console.log("Success:", response.data.tasks);
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log("Error, unable to get Task by status");
+      });
+
+    //get task with todo status
+    axios
+      .request<{ tasks: TaskInterface[] }>({
+        url: `${
+          process.env.REACT_APP_BACKEND_URL as string
+        }/tasks/getTasks/${token}/todo`,
+        headers: { token: token! },
+        method: "get",
+      })
+      .then((response) => {
+        console.log("Success:", response.data.tasks);
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log("Error, unable to get Task by status");
+      });
+
+    //get task with done status
+    //get task with backlog status
+    axios
+      .request<{ tasks: TaskInterface[] }>({
+        url: `${
+          process.env.REACT_APP_BACKEND_URL as string
+        }/tasks/getTasks/${token}/done`,
+        headers: { token: token! },
+        method: "get",
+      })
+      .then((response) => {
+        console.log("Success:", response.data.tasks);
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log("Error, unable to get Task by status");
+      });
+  });
 
   return (
     <div>

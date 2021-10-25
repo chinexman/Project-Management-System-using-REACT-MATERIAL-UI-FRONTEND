@@ -54,7 +54,7 @@ const Home: FC<{}> = ({ children }) => {
   const [imgUrl, setImgUrl] = useState("");
   const [toggle, setToggle] = useState(true);
   const [teams, setTeams] = useState<TeamInterface[]>();
-  const [projects, setProjects] = useState<ProjectInterface[]>();
+  const [projects, setProjects] = useState<ProjectInterface[]>([]);
   const [openTask, setOpenTask] = useState(false);
 
   useEffect(() => {
@@ -252,7 +252,7 @@ const Home: FC<{}> = ({ children }) => {
             {projects?.map((project) => {
               return (
                 <li>
-                  <a href="#">
+                  <Link to={`/tasks/${project._id}`}>
                     <img
                       style={{ width: "8%", height: "8%" }}
                       src={Icon}
@@ -260,7 +260,7 @@ const Home: FC<{}> = ({ children }) => {
                     />
 
                     <span className="links_name">{project.name}</span>
-                  </a>
+                  </Link>
                   <span className="tooltip">{project.name}</span>
                 </li>
               );
@@ -291,7 +291,10 @@ const Home: FC<{}> = ({ children }) => {
                 >
                   <Fade in={openProject}>
                     <div>
-                      <AddProject />
+                      <AddProject
+                        projects={projects as ProjectInterface[]}
+                        setProjects={setProjects}
+                      />
                     </div>
                   </Fade>
                 </Modal>
@@ -393,7 +396,7 @@ const Home: FC<{}> = ({ children }) => {
               <File />
             </ProtectedRoute>
 
-            <ProtectedRoute path="/tasks">
+            <ProtectedRoute path="/tasks/:projectId">
               <DisplayTask setOpenTask={setOpenTask} />
             </ProtectedRoute>
 

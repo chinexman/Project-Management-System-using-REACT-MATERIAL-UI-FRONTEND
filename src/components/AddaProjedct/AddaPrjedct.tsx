@@ -1,86 +1,68 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, FC } from "react";
 import { Form } from "react-bootstrap";
 import styled from "styled-components";
+import { ProjectInterface, TeamInterface } from "../../Interfaces/interface";
 import { setTimeout } from "timers";
+import { authContext } from "../../Utils/Authcontext";
 // import Delete from "../../image/Delete.svg";
 
-function AddProject() {
-  type teamType = string[];
-  const [projectName, setprojectName] = useState("");
-  const [Projects, setProjects] = useState<teamType>([]);
-  const [loading, setLoading] = useState(false);
-  const [failed, setFailed] = useState("");
+const AddProject: FC<{ projects: ProjectInterface[]; setProjects: Function }> =
+  ({ projects, setProjects }) => {
+    type teamType = string[];
+    const [projectName, setprojectName] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [failed, setFailed] = useState("");
+    const { token } = useContext(authContext);
 
-  ////test array of Projects
-  const ProjectsArr = ["Front-end", "middle-end"];
-  const token = localStorage.getItem("token");
-  useEffect(() => {
-    setProjects(ProjectsArr); //the getAllProjects endpoint
-    axios
-      .request({
-        url: "https://kojjac.herokuapp.com/",
-        method: "get",
-        headers: { token: token! },
-        withCredentials: true,
-      })
-      .then((response: any) => {
-        setprojectName(response.data.data.projectName);
+    const submitHandler = (e: any) => {
+      e.preventDefault();
+      setLoading(true);
+      //this should prompt the update-[profile end-point
+      axios
+        .request<{ projectname: String; data?: ProjectInterface }>({
+          url: "https://kojjac.herokuapp.com/projects/create",
+          method: "post",
+          data: { projectname: projectName },
+          headers: { token: token! },
+          withCredentials: true,
+        })
+        .then((response) => {
+          setLoading(false);
+          setFailed("Updated successfully");
+          //   alert("Project created successfully.");
+          console.log("Success:", response.data);
+          setProjects([...projects, response.data.data]);
+        })
+        .catch((err) => {
+          setFailed(err.response.data.message);
+          alert("Unable to create project.");
+          console.log("Error:", err.response);
+          console.log(err);
+          setLoading(false);
+        });
+    };
 
-        console.log(response.data.data);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  }, []);
+    return (
+      <div>
+        <Wrapper>
+          <div className="name">
+            <h1>Add a New Project</h1>
+            <BorderBottom />
+          </div>
+          <Form className="profileForm" onSubmit={submitHandler}>
+            <label>
+              <h3> Name </h3>
+              <Input
+                value={projectName}
+                onChange={(e) => setprojectName(e.target.value)}
+                type=" text"
+                placeholder="Enter name"
+                required
+              />
+            </label>
 
-  const leaveTeamFunc = () => {
-    //this should prompt the leave-team end-point
-  };
-
-  const submitHandler = (e: any) => {
-    e.preventDefault();
-    setLoading(true);
-    //this should prompt the update-[profile end-point
-    axios
-      .request({
-        url: "https://kojjac.herokuapp.com/",
-        method: "post",
-        data: { projectname: projectName },
-        headers: { token: token! },
-        withCredentials: true,
-      })
-      .then((response) => {
-        setLoading(false);
-        setFailed("Updated successfully");
-        console.log("Success:", response.data);
-      })
-      .catch((err) => {
-        setFailed(err.response.data.messsage);
-        alert("Unable to create project.");
-        console.log(err.response);
-      });
-  };
-
-  return (
-    <div>
-      <Wrapper>
-        <div className="name">
-          <h1>Add a New Project</h1>
-          <BorderBottom />
-        </div>
-        <Form className="profileForm" onSubmit={submitHandler}>
-          <label>
-            <h3> Name </h3>
-            <Input
-              value={projectName}
-              onChange={(e) => setprojectName(e.target.value)}
-              type=" text"
-              placeholder="Enter name"
-            />
-          </label>
-
-          {/* <label>
+            {/* <label>
             <h3> Projects </h3>
             <div className="Projects-input">
               {Projects.map((team, index) => {
@@ -97,16 +79,16 @@ function AddProject() {
             </div>
           </label> */}
 
-          <button disabled={loading} type="submit" className="button">
-            {loading ? "Loading" : "Create Project"}
-          </button>
-          {/* {failed ? <strong className="failure-tag">Failed to update</strong> :  <strong className="failure-tag">Update successful</strong>} */}
-          <p>{failed}</p>
-        </Form>
-      </Wrapper>
-    </div>
-  );
-}
+            <button disabled={loading} type="submit" className="button">
+              {loading ? "Loading" : "Create Project"}
+            </button>
+            {/* {failed ? <strong className="failure-tag">Failed to update</strong> :  <strong className="failure-tag">Update successful</strong>} */}
+            <p>{failed}</p>
+          </Form>
+        </Wrapper>
+      </div>
+    );
+  };
 
 export default AddProject;
 
