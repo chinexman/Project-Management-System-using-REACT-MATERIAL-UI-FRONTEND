@@ -20,7 +20,6 @@ import ChangePassword from "../changePassword/ChangePassword";
 import Teams from "../team/Teams";
 import { ProjectInterface, TeamInterface } from "../../Interfaces/interface";
 import AddProject from "../../components/AddaProjedct/AddaPrjedct";
-import Demo from "../../Assets/demo.svg";
 import File from "../filesPage/File";
 import { DisplayTask } from "../task/DisplayTask";
 import AddTask from "../task/AddTask";
