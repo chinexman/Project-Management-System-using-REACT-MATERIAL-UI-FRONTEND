@@ -10,19 +10,20 @@ import { TaskInterface } from "../../Interfaces/interface";
 import { authContext } from "../../Utils/Authcontext";
 
 export const DisplayTask: FC<{ setOpenTask: Function }> = ({ setOpenTask }) => {
-  const headerlinks = [
-    { name: "Tasks", link: "/tasks" },
-    { name: "Kanban", link: "/kanban" },
-    { name: "Activity", link: "/activity" },
-    { name: "Calendar", link: "/calendar" },
-    { name: "Files", link: "/file" },
-  ];
   const { projectId } = useParams<{ projectId: string }>();
   const [backlogs, setBacklogs] = useState<TaskInterface[]>([]);
   const [todos, setTodos] = useState<TaskInterface[]>([]);
   const [done, setDone] = useState<TaskInterface[]>([]);
   const [loading, setLoading] = useState(false);
   const { token } = useContext(authContext);
+
+  const headerlinks = [
+    { name: "Tasks", link: `/tasks/${projectId}` },
+    { name: "Kanban", link: "/kanban" },
+    { name: "Activity", link: "/activity" },
+    { name: "Calendar", link: "/calendar" },
+    { name: "Files", link: "/file" },
+  ];
 
   useEffect(() => {
     //get task with backlog status
@@ -85,37 +86,38 @@ export const DisplayTask: FC<{ setOpenTask: Function }> = ({ setOpenTask }) => {
         <DisplayTaskContainer>
           {/* Display tasks in backlog */}
           <TaskCardGroup title={"Backlog"} setOpenTask={setOpenTask}>
-            <DisplayTaskCard
-              title="E-mail after registration so that I can confirm my address"
-              tag="Development"
-            />
-            <DisplayTaskCard
-              title="E-mail after registration so that I can confirm my address"
-              tag="Design"
-            />
+            {backlogs.length > 0 ? (
+              <DisplayTaskCard
+                title="E-mail after registration so that I can confirm my address"
+                tag="Development"
+              />
+            ) : (
+              <p>No backlogs</p>
+            )}
+            {/* */}
           </TaskCardGroup>
 
           <TaskCardGroup title={"Todo"} setOpenTask={setOpenTask}>
-            <DisplayTaskCard
-              title="E-mail after registration so that I can confirm my address"
-              tag="Product"
-            />
-            <DisplayTaskCard
-              title="E-mail after registration so that I can confirm my address"
-              tag="UI/UX"
-            />
+            {todos.length > 0 ? (
+              <DisplayTaskCard
+                title="E-mail after registration so that I can confirm my address"
+                tag="UI/UX"
+              />
+            ) : (
+              <p>No todos</p>
+            )}
           </TaskCardGroup>
 
           <TaskCardGroup title={"Done"} setOpenTask={setOpenTask}>
-            <DisplayTaskCard
-              title="E-mail after registration so that I can confirm my address"
-              tag="Product"
-            />
-            <DisplayTaskCard
-              title="E-mail after registration so that I can confirm my address"
-              tag="Development"
-              avatarUrl="https://res.cloudinary.com/projectmanagementgroupb/image/upload/v1634869516/vjjkzu5pxvy3n0sylgua.jpg"
-            />
+            {done.length > 0 ? (
+              <DisplayTaskCard
+                title="E-mail after registration so that I can confirm my address"
+                tag="Development"
+                avatarUrl="https://res.cloudinary.com/projectmanagementgroupb/image/upload/v1634869516/vjjkzu5pxvy3n0sylgua.jpg"
+              />
+            ) : (
+              <p>No task is done</p>
+            )}
           </TaskCardGroup>
         </DisplayTaskContainer>
         <TaskDescription />
@@ -198,9 +200,9 @@ function generateRandomFontColor() {
 
 const DisplayTaskContainer = styled.div`
   background-color: white;
-  max-width: 40% !important;
+  width: 45% !important;
   padding: 30px;
-  max-height: 85vh;
+  height: 82vh;
   margin-top: 5px;
   margin-bottom: 50px;
   overflow-y: auto;

@@ -1,8 +1,9 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Form } from "react-bootstrap";
 import styled from "styled-components";
 import { setTimeout } from "timers";
+import { authContext } from "../../Utils/Authcontext";
 // import Delete from "../../image/Delete.svg";
 
 function AddTask() {
@@ -13,12 +14,9 @@ function AddTask() {
   const [Projects, setProjects] = useState<teamType>([]);
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState("");
+  const { token } = useContext(authContext);
 
-  ////test array of Projects
-  const ProjectsArr = ["Front-end", "middle-end"];
-  const token = localStorage.getItem("token");
   useEffect(() => {
-    setProjects(ProjectsArr); //the getAllProjects endpoint
     axios
       .request({
         url: "https://kojjac.herokuapp.com/",

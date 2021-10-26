@@ -8,7 +8,7 @@ export interface ProjectInterface {
 }
 
 export interface TeamInterface {
-  name: string;
+  teamName: string;
 }
 
 export interface TaskInterface {

@@ -109,8 +109,23 @@ const Home: FC<{}> = ({ children }) => {
       });
 
     //get  teams
-    setTeams([]);
+    getTeams();
   }, []);
+
+  const getTeams = () => {
+    axios
+      .request<{ teams: TeamInterface[] }>({
+        url: "https://kojjac.herokuapp.com/teams/all",
+        method: "get",
+        headers: { token: token! },
+      })
+      .then((response) => {
+        setTeams(response.data.teams);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
 
   const handleSignOut = () => {
     signOut();
@@ -334,9 +349,9 @@ const Home: FC<{}> = ({ children }) => {
               return (
                 <li>
                   <a href="#">
-                    <span className="links_name">{team.name}</span>
+                    <span className="links_name">{team.teamName}</span>
                   </a>
-                  <span className="tooltip">{team.name}</span>
+                  <span className="tooltip">{team.teamName}</span>
                 </li>
               );
             })}
@@ -362,7 +377,7 @@ const Home: FC<{}> = ({ children }) => {
                 >
                   <Fade in={open}>
                     <div>
-                      <AddTeam />
+                      <AddTeam projects={projects} getTeams={getTeams} />
                     </div>
                   </Fade>
                 </Modal>
