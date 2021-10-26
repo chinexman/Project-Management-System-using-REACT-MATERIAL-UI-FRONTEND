@@ -1,9 +1,9 @@
 const demoData = {
     tasks: {
-        'task-1': {id: 'task-1', title: 'E-mail after registration so that I can confirm my', image: Image, tag:'Development', picture: Image},
-        'task-2': {id: 'task-2', title: 'E-mail after registration so that I can confirm my', image: Image, tag:'Development', picture: Image},
-        'task-3': {id: 'task-3', title: 'E-mail after registration so that I can confirm my', image: Image, tag:'Development', picture: Image},
-        'task-4': {id: 'task-4', title: 'E-mail after registration so that I can confirm my', image: Image, tag:'Development', picture: Image},
+        'task-1': {id: 'task-1', title: 'E-mail after registration so that I can confirm my', image: Image, tag:'Development'},
+        'task-2': {id: 'task-2', title: 'E-mail after registration so that I can confirm my', image: Image, tag:'Development'},
+        'task-3': {id: 'task-3', title: 'E-mail after registration so that I can confirm my', image: Image, tag:'Development'},
+        'task-4': {id: 'task-4', title: 'E-mail after registration so that I can confirm my', image: Image, tag:'Development'},
     },
 
     columns: {

@@ -52,7 +52,7 @@ export const Links = styled.ul`
 `;
 export const ChangePasswordTopbarWrap = styled.div`
   width: 100%;
-  height: 136px;
+  height: 120px;
   background-color: #ffffff;
   .header {
     padding: 25px 28px 0px 29px;
@@ -67,6 +67,7 @@ line-height: 47px;
 border-radius: 20px;
 width: 110px;
 height: 40px;
+cursor: pointer;
 }
   }
   
