@@ -19,9 +19,9 @@ const headerlinks = [
 
 
 const itemsFromBackend = [
-  { id: uuid(), title: 'E-mail after registration so that I can confirm my', avatarUrl: "https://res.cloudinary.com/projectmanagementgroupb/image/upload/v1634869516/vjjkzu5pxvy3n0sylgua.jpg", tag:'Development' },
-  { id: uuid(), title: '2 E-mail after registration so that I can confirm my', avatarUrl: "https://res.cloudinary.com/projectmanagementgroupb/image/upload/v1634869516/vjjkzu5pxvy3n0sylgua.jpg", tag:'Development' },
-  { id: uuid(), title: '3E-mail after registration so that I can confirm my', avatarUrl: "https://res.cloudinary.com/projectmanagementgroupb/image/upload/v1634869516/vjjkzu5pxvy3n0sylgua.jpg", tag:'Development' },
+  { id: uuid(), title: 'E-mail after registration so that I can confirm my', avatarUrl: "", tag:'Development' },
+  { id: uuid(), title: '2 E-mail after registration so that I can confirm my', avatarUrl: "", tag:'Development' },
+  { id: uuid(), title: '3E-mail after registration so that I can confirm my', avatarUrl: "", tag:'Development' },
   { id: uuid(), title: '4E-mail after registration so that I can confirm my', avatarUrl: "https://res.cloudinary.com/projectmanagementgroupb/image/upload/v1634869516/vjjkzu5pxvy3n0sylgua.jpg", tag:'Development' },
 
 ];
@@ -44,7 +44,6 @@ const columnsFromBackend = {
 const onDragEnd = (result, columns, setColumns) => {
   if (!result.destination) return;
   const { source, destination } = result;
-
   if (source.droppableId !== destination.droppableId) {
     const sourceColumn = columns[source.droppableId];
     const destColumn = columns[destination.droppableId];
@@ -110,10 +109,10 @@ function App() {
                         ref={provided.innerRef}
                         style={{
                             background: snapshot.isDraggingOver
-                            ? "lightblue"
+                            ? "#F7F6F3"
                             : "white",
-                          
-                          width: 300,
+                          borderRadius: '10px',
+                          width: 350,
                           minHeight: 500
                         }}
                       >
@@ -140,6 +139,7 @@ style={{
   backgroundColor: snapshot.isDragging
     ? "#CEF9C6"
     : "#F7F6F3",
+    overflowY: 'scroll',
 
   ...provided.draggableProps.style
 }}
@@ -196,10 +196,12 @@ export default App;
 
 
 
+
 const KanbanSection = styled.div`
 display: flex;
 justify-content:center;
 height: 100%;
+width: 80vw;
 `
 const Kanbans = styled.div`
  margin: 10px;
@@ -238,6 +240,7 @@ const KanbanColumn = styled.div`
   margin-top: 5px;
   margin-bottom: 10px;
   overflow-y: auto;
+ 
 `;
 const KanbanCard = styled.div`
   margin: 20px 0;
@@ -272,4 +275,6 @@ const TagContainer = styled.div`
   margin-left: 10px;
   text-transform: uppercase;
   font-weight: bold;
+  background-color: #F5F0FF;
+  color:#764CED;
 `;

@@ -390,6 +390,7 @@ return loading ? (
       </div>
       <section className="home-section">
         <Switch>
+        {/* <ToastContainer /> */}
           <ProtectedRoute path="/profile">
             <Profile setNavDisplayPicture={setImgUrl} />
           </ProtectedRoute>

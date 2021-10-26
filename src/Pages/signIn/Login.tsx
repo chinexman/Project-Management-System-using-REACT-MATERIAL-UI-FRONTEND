@@ -42,10 +42,13 @@ function Login() {
         withCredentials: true,
       })
       .then(async (response) => {
-        toast.success("Login Success:", response);
+        console.log("Login Success:", response)
         const tokenFromServer = response.data.token;
         signIn(tokenFromServer);
         setLoading(false);
+        toast.success("Login Successful", {
+          position: toast.POSITION.TOP_CENTER
+        });
       })
       .catch((error) => {
         console.log(error.response);
