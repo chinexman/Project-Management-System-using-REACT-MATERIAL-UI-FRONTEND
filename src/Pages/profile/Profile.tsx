@@ -137,8 +137,8 @@ const Profile: FC<{ setNavDisplayPicture: (a: string) => void }> = ({
     },
   ];
   return (
-    <div style={{ maxHeight: "100vh" }}>
-      <Header header="Profile Settings" headerlinks={headerlinks}></Header>
+    <>
+      <Header header="Profile Settings" signOut= "signOut" headerlinks={headerlinks}></Header>
       <Wrapper>
         <div className="image">
           {/* <div onClick={changePic} className="change-pic-div">change</div> */}
@@ -208,7 +208,7 @@ const Profile: FC<{ setNavDisplayPicture: (a: string) => void }> = ({
           </p>
         </Form>
       </Wrapper>
-    </div>
+    </>
   );
 };
 export default Profile;

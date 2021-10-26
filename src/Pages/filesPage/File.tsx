@@ -189,6 +189,7 @@ export default function File() {
   return (
     <>
       <Header
+      signOut= "signOut"
         header="File"
         headerlinks={[
           { name: "Calendar", link: "/calendar" },
@@ -336,3 +337,5 @@ export default function File() {
             
                         </tbody> */
 }
+
+

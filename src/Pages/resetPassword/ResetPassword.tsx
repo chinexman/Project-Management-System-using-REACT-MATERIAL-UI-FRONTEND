@@ -46,7 +46,7 @@ export default function ResetPassword() {
   };
   return (
     <>
-      <Header header="Reset Password" headerlinks={[]} />
+      <Header header="Reset Password" signOut="signOut" headerlinks={[]} />
       <ChangepasswordWrapper>
         <div className="changepasswordForm">
           {success ? (

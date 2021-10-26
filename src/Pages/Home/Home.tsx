@@ -2,7 +2,7 @@ import { authContext } from "../../Utils/Authcontext";
 import { useContext, useEffect, useState, FC } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { Grid } from "../../components/Sidebar/sidebar.styles.";
+import { Grid, Statistics } from "../../components/Sidebar/sidebar.styles.";
 import Image from "../../Images/profile2.png";
 import Icon from "../../Assets/design.svg";
 import Logo from "../../Assets/logo.svg";
@@ -23,8 +23,13 @@ import AddProject from "../../components/AddaProjedct/AddaPrjedct";
 import File from "../filesPage/File";
 import { DisplayTask } from "../task/DisplayTask";
 import AddTask from "../task/AddTask";
-import Activity from "../activityPage/Activity";
+// import Activity from "../activityPage/Activity";
 import Homepage from "../Home_page/Homepage";
+import Kanban from "../Kanban/Kanban.js";
+import Load from "../../components/Loading/loading";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
@@ -39,7 +44,6 @@ const useStylesProject = makeStyles((theme) => ({
     justifyContent: "center",
   },
 }));
-
 const Home: FC<{}> = ({ children }) => {
   console.log("renderi");
   const backendUrl = process.env.REACT_APP_BACKEND_URL as string;
@@ -55,6 +59,10 @@ const Home: FC<{}> = ({ children }) => {
   const [teams, setTeams] = useState<TeamInterface[]>();
   const [projects, setProjects] = useState<ProjectInterface[]>([]);
   const [openTask, setOpenTask] = useState(false);
+
+  const showToast = () => {
+    toast("I am Tostify!");
+  };
 
   useEffect(() => {
     axios
@@ -158,7 +166,7 @@ const Home: FC<{}> = ({ children }) => {
   };
 
   return loading ? (
-    <h4>Loading... </h4>
+    <Load />
   ) : (
     <>
       <Grid>
@@ -196,17 +204,30 @@ const Home: FC<{}> = ({ children }) => {
                   >
                     {user.fullname}
                   </div>
-                  <div
-                    className="job"
-                    style={{ cursor: "pointer" }}
-                    id="job"
-                    onClick={(e) => signOut()}
-                  >
-                    Logout
+                  <div className="job" style={{ cursor: "pointer" }} id="job">
+                    Product Owner
                   </div>
                 </div>
+                <i
+                  style={{ color: "#878787", cursor: "pointer" }}
+                  className="fas fa-ellipsis-h"
+                ></i>
               </div>
+
               <i className="bx bx-log-out" id="log_out"></i>
+            </li>
+            {/* Statistics  */}
+            <li>
+              <Statistics className="stats">
+                <div className="stats__left">
+                  <h1>372</h1>
+                  <p id="tag">completed Tasks</p>
+                </div>
+                <div className="stats__right">
+                  <h1>11</h1>
+                  <p id="tag">Open Taks</p>
+                </div>
+              </Statistics>
             </li>
             <li>
               <i className="bx bx-search">
@@ -254,7 +275,6 @@ const Home: FC<{}> = ({ children }) => {
               </a>
               <span className="tooltip">Notifications</span>
             </li>
-
             <li>
               <Link to="#">
                 <span className="links_name" id="menu">
@@ -272,14 +292,12 @@ const Home: FC<{}> = ({ children }) => {
                       src={Icon}
                       alt="icon"
                     />
-
                     <span className="links_name">{project.name}</span>
                   </Link>
                   <span className="tooltip">{project.name}</span>
                 </li>
               );
             })}
-
             <li>
               <span className="tooltip">Notifications</span>
             </li>
@@ -290,6 +308,7 @@ const Home: FC<{}> = ({ children }) => {
                     +Add a Project
                   </span>
                 </Button>
+
                 {/* modal to create project */}
                 <Modal
                   aria-labelledby="transition-modal-title"
@@ -312,7 +331,6 @@ const Home: FC<{}> = ({ children }) => {
                     </div>
                   </Fade>
                 </Modal>
-
                 {/* modal for adding new task */}
                 <Modal
                   aria-labelledby="transition-modal-title"
@@ -334,7 +352,6 @@ const Home: FC<{}> = ({ children }) => {
                 </Modal>
               </a>
             </li>
-
             <li>
               <Link to="/teams">
                 <span className="links_name" id="menu">
@@ -343,7 +360,6 @@ const Home: FC<{}> = ({ children }) => {
               </Link>
               <span className="tooltip">TEAMS</span>
             </li>
-
             {teams?.map((team) => {
               return (
                 <li>
@@ -389,6 +405,14 @@ const Home: FC<{}> = ({ children }) => {
               </a>
             </li>
           </ul>
+          <div id="invite__container">
+            <span className="invite__text">
+              <Link id="invite" to="#">
+                Invite your team{" "}
+              </Link>
+              <span id="collaborate">and start collaborating</span>
+            </span>
+          </div>
         </div>
         <section className="home-section">
           <Switch>
@@ -405,7 +429,6 @@ const Home: FC<{}> = ({ children }) => {
             <ProtectedRoute path="/teams">
               <Teams />
             </ProtectedRoute>
-
             <ProtectedRoute path="/file">
               <File />
             </ProtectedRoute>
@@ -413,9 +436,12 @@ const Home: FC<{}> = ({ children }) => {
             <ProtectedRoute path="/tasks/:projectId">
               <DisplayTask setOpenTask={setOpenTask} />
             </ProtectedRoute>
-
-            <ProtectedRoute path="/activity">
+            {/* <ProtectedRoute path="/activity">
               <Activity />
+            </ProtectedRoute> */}
+
+            <ProtectedRoute path="/kanban">
+              <Kanban />
             </ProtectedRoute>
           </Switch>
         </section>
@@ -423,5 +449,4 @@ const Home: FC<{}> = ({ children }) => {
     </>
   );
 };
-
 export default Home;

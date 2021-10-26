@@ -25,7 +25,7 @@ export const Grid = styled.div`
     align-items: center;
     position: relative;
   }
-  open .sidebar .logo-details .icon {
+   .sidebar .logo-details .icon {
     opacity: 0;
     transition: all 0.5s ease;
   }
@@ -54,7 +54,6 @@ export const Grid = styled.div`
   .sidebar.open .logo-details #btn {
     text-align: right;
   }
-
   .sidebar i {
     color: #fff;
     height: 60px;
@@ -186,7 +185,7 @@ export const Grid = styled.div`
     height: 66px;
     width: 70px;
     left: 0;
-    top: 3.7em;
+    top: 4.2em;
     padding: 10px 22px;
     background: var(--lightDark-background);
     transition: all 0.5s ease;
@@ -199,6 +198,7 @@ export const Grid = styled.div`
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
+    justify-content: space-evenly;
   }
   .sidebar li img {
     height: 45px;
@@ -234,6 +234,28 @@ export const Grid = styled.div`
     width: 50px;
     background: none;
   }
+  /* .invite__text{
+    display: flex;
+  } */
+.invite__text{
+  color: white;
+  font-weight: 700;
+ 
+}
+  #invite{
+    color: #ffc200;
+    text-decoration: underline; 
+  }
+  #invite__container{
+    padding:20px;
+    line-height: 20px;
+    margin-top: 60px;
+  }
+  #collaborate{
+    color: white;
+
+
+  }
   .home-section {
     position: relative;
     background: #eeebe5;
@@ -255,9 +277,40 @@ export const Grid = styled.div`
     font-weight: 500;
     margin: 18px;
   }
+  
   @media (max-width: 420px) {
     .sidebar li .tooltip {
       display: none;
     }
   }
 `;
+
+export const Statistics = styled.div`
+display:flex;
+color: white;
+padding: 16px 30px 20px 30px;
+justify-content:space-between;
+#tag{
+  color: #878787;
+    margin-top: 7px; 
+}
+.stats__right > h1{
+  text-align: left;
+  font-weight: 800;
+}
+.stats__right > p{
+  font-size: 13px;
+  font-weight: bold;
+}
+.stats__left {
+  margin-right: 20px;
+}
+.stats__left > h1{
+  text-align: left;
+  font-weight: 800;
+}
+.stats__left > p{
+  font-size: 13px;
+  font-weight: bold;
+}
+` 

@@ -1,17 +1,23 @@
-import React from "react";
+import {useContext} from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { authContext } from "../Utils/Authcontext";
 
 interface propType {
   headerlinks: { name: string; link: string }[] | [];
   header: string;
+  signOut: string;
 }
 export default function Header(props: propType) {
+  const { token, signOut } = useContext(authContext);
+
   return (
     <ChangePasswordTopbarWrap>
       <div className="header">
         <h1>{props.header}</h1>
+        <button  onClick={(e) => signOut()} className="button">{props.signOut}</button>
       </div>
+
       <Links>
         {props.headerlinks.map(
           (headerlink: { name: string; link: string }, index: number) => (
@@ -33,7 +39,7 @@ export const Links = styled.ul`
   align-items: center;
   li {
     list-style-type: none;
-    margin: 20px;
+    padding: 25px 28px 0px 29px;
     .linktag {
       text-decoration: none;
       color: #000000;
@@ -49,6 +55,21 @@ export const ChangePasswordTopbarWrap = styled.div`
   height: 120px;
   background-color: #ffffff;
   .header {
-    padding: 20px;
+    padding: 25px 28px 0px 29px;
+    display: flex ; 
+    font-weight: 900;
+font-size: 24px;
+line-height: 47px;
+     align-items: center;
+    justify-content: space-between;
+    .button{
+      background: #CEF9C6;
+border-radius: 20px;
+width: 110px;
+height: 40px;
+cursor: pointer;
+}
   }
+  
 `;
+

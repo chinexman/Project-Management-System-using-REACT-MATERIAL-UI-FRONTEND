@@ -4,6 +4,8 @@ import { Form } from "react-bootstrap";
 import styled from "styled-components";
 import { ProjectInterface, TeamInterface } from "../../Interfaces/interface";
 import { setTimeout } from "timers";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { authContext } from "../../Utils/Authcontext";
 // import Delete from "../../image/Delete.svg";
 
@@ -63,6 +65,53 @@ const AddProject: FC<{ projects: ProjectInterface[]; setProjects: Function }> =
             </label>
 
             {/* <label>
+  const leaveTeamFunc = () => {
+    //this should prompt the leave-team end-point
+  };
+
+  const submitHandler = (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+    //this should prompt the update-[profile end-point
+    axios
+      .request({
+        url: "https://kojjac.herokuapp.com/",
+        method: "post",
+        data: { projectname: projectName },
+        headers: { token: token! },
+        withCredentials: true,
+      })
+      .then((response) => {
+        setLoading(false);
+        setFailed("Updated successfully");
+        console.log("Success:", response.data);
+      })
+      .catch((err) => {
+        setFailed(err.response.data.messsage);
+        toast.error("Unable to create project.");
+        console.log(err.response);
+      });
+  };
+
+  return (
+    <div>
+      <Wrapper>
+        <div className="name">
+          <h1>Add a New Project</h1>
+          <BorderBottom />
+        </div>
+        <Form className="profileForm" onSubmit={submitHandler}>
+          <label>
+            <h3> Name </h3>
+            <Input
+              value={projectName}
+              onChange={(e) => setprojectName(e.target.value)}
+              type=" text"
+              placeholder="Enter name"
+            />
+          </label>
+
+          {/* <label>
             <h3> Projects </h3>
             <div className="Projects-input">
               {Projects.map((team, index) => {
@@ -82,6 +131,7 @@ const AddProject: FC<{ projects: ProjectInterface[]; setProjects: Function }> =
             <button disabled={loading} type="submit" className="button">
               {loading ? "Loading" : "Create Project"}
             </button>
+            <ToastContainer />
             {/* {failed ? <strong className="failure-tag">Failed to update</strong> :  <strong className="failure-tag">Update successful</strong>} */}
             <p>{failed}</p>
           </Form>

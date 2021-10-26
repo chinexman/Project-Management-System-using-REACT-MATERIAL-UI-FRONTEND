@@ -6,6 +6,9 @@ import ErrorMessage from "../Signup/errorMessage";
 import { authContext } from "../../Utils/Authcontext";
 import CustomRedirect from "../../Utils/CustomRedirect";
 import { Link } from "react-router-dom";
+import Load from "../../components/Loading/loading"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Login() {
   console.log("rendering login page");
@@ -18,7 +21,7 @@ function Login() {
   const submitHandler = async (e: any) => {
     e.preventDefault();
     if (email === "" || password === "") {
-      setError("Email and Password are required");
+      toast.warn("Email and Password are required");
       return;
     }
     setLoading(true);
@@ -39,14 +42,17 @@ function Login() {
         withCredentials: true,
       })
       .then(async (response) => {
-        console.log("Success:", response);
+        console.log("Login Success:", response)
         const tokenFromServer = response.data.token;
         signIn(tokenFromServer);
         setLoading(false);
+        toast.success("Login Successful", {
+          position: toast.POSITION.TOP_CENTER
+        });
       })
       .catch((error) => {
         console.log(error.response);
-        setError(error.response.data.msg);
+        toast.error(error.response.data.msg);
         setLoading(false);
       });
   };
@@ -55,6 +61,7 @@ function Login() {
     <CustomRedirect />
   ) : (
     <Wrapper>
+      <ToastContainer />
       <div className="login">
         <img className="logo" src={Logo} alt="Login" />
         <BorderBottom />
@@ -84,7 +91,7 @@ function Login() {
           </label>
           <Button disabled={loading}>
             {" "}
-            {loading ? "logging in...." : "Login"}{" "}
+            {loading ?  <Load /> : "Login"}{" "}
           </Button>
         </form>
         <div

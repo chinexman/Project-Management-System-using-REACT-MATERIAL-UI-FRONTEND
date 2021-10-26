@@ -7,6 +7,7 @@ const Activity = () => {
   return (
     <>
       <Header
+      signOut="signOut"
         header="File"
         headerlinks={[
           { name: "Task", link: "/task" },

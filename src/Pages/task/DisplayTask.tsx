@@ -81,7 +81,7 @@ export const DisplayTask: FC<{ setOpenTask: Function }> = ({ setOpenTask }) => {
 
   return (
     <div>
-      <Header header="PROJECT PRIMUS" headerlinks={headerlinks} />
+      <Header signOut="signOut" header="PROJECT PRIMUS" headerlinks={headerlinks} />
       <div style={{ display: "flex" }}>
         <DisplayTaskContainer>
           {/* Display tasks in backlog */}
@@ -181,13 +181,13 @@ const TaskCardGroup: FC<{ title: string; setOpenTask: Function }> = ({
   );
 };
 
-function generateRandomHexColor() {
+export function generateRandomHexColor() {
   const colors = ["#F7F6F3", "#FFF8DD", "#EAEAEA"];
   const randomIndex = Math.floor(Math.random() * colors.length + 0);
   return colors[randomIndex];
 }
 
-function generateRandomFontColor() {
+export function generateRandomFontColor() {
   const backgroundOpacity = 0.1;
   const colors = [
     { color: [237, 100, 0, 1], background: [237, 100, 0, backgroundOpacity] },
@@ -207,6 +207,7 @@ const DisplayTaskContainer = styled.div`
   margin-bottom: 50px;
   overflow-y: auto;
 `;
+
 const CardBody = styled.div<{ custom_background: string }>`
   background-color: ${(props) => props.custom_background};
   margin: 20px 0;
