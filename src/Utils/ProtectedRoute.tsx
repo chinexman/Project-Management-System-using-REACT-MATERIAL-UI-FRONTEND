@@ -8,6 +8,7 @@ const ProtectedRoute: FC<{ path: string }> = ({ children, ...others }) => {
   return (
     <Route
       {...others}
+      exact
       render={({ location }) => {
         return token ? (
           children

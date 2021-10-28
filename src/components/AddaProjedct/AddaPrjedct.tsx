@@ -31,16 +31,17 @@ const AddProject: FC<{ projects: ProjectInterface[]; setProjects: Function }> =
         })
         .then((response) => {
           setLoading(false);
-          setFailed("Updated successfully");
-          //   alert("Project created successfully.");
+          toast.success("Updated successfully");
           console.log("Success:", response.data);
           setProjects([...projects, response.data.data]);
         })
         .catch((err) => {
           setFailed(err.response.data.message);
-          alert("Unable to create project.");
+          toast.warn(err.response.data.message);
+          toast.error("Unable to create project.");
           console.log("Error:", err.response);
           console.log(err);
+          toast.error(err.response);
           setLoading(false);
         });
     };
@@ -48,6 +49,7 @@ const AddProject: FC<{ projects: ProjectInterface[]; setProjects: Function }> =
     return (
       <div>
         <Wrapper>
+          <ToastContainer />
           <div className="name">
             <h1>Add a New Project</h1>
             <BorderBottom />
@@ -133,7 +135,6 @@ const AddProject: FC<{ projects: ProjectInterface[]; setProjects: Function }> =
             </button>
             <ToastContainer />
             {/* {failed ? <strong className="failure-tag">Failed to update</strong> :  <strong className="failure-tag">Update successful</strong>} */}
-            <p>{failed}</p>
           </Form>
         </Wrapper>
       </div>

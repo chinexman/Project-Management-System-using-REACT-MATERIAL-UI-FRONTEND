@@ -1,47 +1,57 @@
 import axios from "axios";
-import { useState, useEffect, FC, useContext } from "react";
+import React, { useState, useEffect, useContext, FC } from "react";
 import { Form } from "react-bootstrap";
 import styled from "styled-components";
-import { ProjectInterface } from "../../Interfaces/interface";
 import { authContext } from "../../Utils/Authcontext";
-// import Delete from "../../image/Delete.svg";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
-const AddTeam: FC<{ projects: ProjectInterface[]; getTeams: Function }> = ({
-  projects,
-  getTeams,
-}) => {
-  const [teamName, setTeamName] = useState("");
-  const [about, setAbout] = useState("");
-  const [projectId, setProjectId] = useState("");
+import { ProjectInterface } from "../../Interfaces/interface";
+const InviteCollab: FC<{ projects: ProjectInterface[] }> = ({ projects }) => {
+  type teamType = string[];
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState("");
   const { token } = useContext(authContext);
+  const [projectId, setProjectId] = useState("");
+
+  //   useEffect(() => {
+  //     axios
+  //       .request({
+  //         url: "https://kojjac.herokuapp.com/",
+  //         method: "get",
+  //         headers: { token: token! },
+  //         withCredentials: true,
+  //       })
+  //       .then((response: any) => {
+  //         console.log(response.data.data);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err.response);
+  //       });
+  //   }, []);
 
   const submitHandler = (e: any) => {
     e.preventDefault();
     setLoading(true);
+    console.log("kayode:", projectId);
     //this should prompt the update-[profile end-point
     axios
       .request({
-        url: `https://kojjac.herokuapp.com/teams/create/${projectId}`,
+        url: "https://kojjac.herokuapp.com/projects/invite",
         method: "post",
-        data: { teamName, about, projectId },
+        data: { email, projectId },
         headers: { token: token! },
         withCredentials: true,
       })
       .then((response: any) => {
         setLoading(false);
-        setFailed("Team created successfully");
-        toast.success("Team created successfully");
-        getTeams();
+        setFailed("Invite sent.");
+        toast.success("Invitation sent successfully.");
         console.log(response);
       })
       .catch((err) => {
-        setFailed(err.response.data.messsage);
-        toast.error(err.response.data.messsage);
         setLoading(false);
+        toast.error("Error, Unable to invite collaborator.");
+        setFailed(err.response.data.messsage);
         console.log(err.response);
       });
   };
@@ -49,60 +59,56 @@ const AddTeam: FC<{ projects: ProjectInterface[]; getTeams: Function }> = ({
   return (
     <div>
       <Wrapper>
-        <ToastContainer />
-        <div className="name">
-          <h1>Add a New Team</h1>
-          <BorderBottom />
-        </div>
-        <Form className="profileForm" onSubmit={submitHandler}>
-          <label>
-            <h3> Team Name </h3>
-            <Input
-              value={teamName}
-              onChange={(e) => setTeamName(e.target.value)}
-              type=" text"
-              placeholder="Enter Team Name"
-              required
-            />
-          </label>
+        {projects.length < 1 ? (
+          <p style={{ padding: "20px" }}>Please create a project</p>
+        ) : (
+          <>
+            <ToastContainer></ToastContainer>
+            <div className="name">
+              <h1>Invite Collaborator</h1>
+              <BorderBottom />
+            </div>
+            <Form className="profileForm" onSubmit={submitHandler}>
+              <label>
+                <h3> Projects </h3>
+                <Select
+                  name="projectname"
+                  value={projectId}
+                  onChange={(e) => setProjectId(e.target.value)}
+                  required
+                >
+                  <option value="">select project</option>
+                  {projects.map((project) => {
+                    return <option value={project._id}>{project.name}</option>;
+                  })}
+                </Select>
+              </label>
 
-          <label>
-            <h3> About </h3>
-            <Input
-              value={about}
-              onChange={(e) => setAbout(e.target.value)}
-              type=" text"
-              placeholder="describe team..."
-              required
-            />
-          </label>
+              <label>
+                <h3> Email </h3>
+                <Input
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  type=" text"
+                  placeholder="collaborator email..."
+                  required
+                />
+              </label>
 
-          <label>
-            <h3> Projects </h3>
-            <Select
-              name="assignee"
-              value={projectId}
-              onChange={(e) => setProjectId(e.target.value)}
-            >
-              <option value="">--select project--</option>
-              {projects.map((project) => {
-                return <option value={project._id}>{project.name}</option>;
-              })}
-            </Select>
-          </label>
+              <button disabled={loading} type="submit" className="button">
+                {loading ? "Loading" : "Invite Collaborator"}
+              </button>
 
-          <button disabled={loading} type="submit" className="button">
-            {loading ? "Loading" : "Create Team"}
-          </button>
-          {/* {failed ? <strong className="failure-tag">Failed to update</strong> :  <strong className="failure-tag">Update successful</strong>} */}
-          {/* <p>{failed}</p> */}
-        </Form>
+              <p>{failed}</p>
+            </Form>
+          </>
+        )}
       </Wrapper>
     </div>
   );
 };
 
-export default AddTeam;
+export default InviteCollab;
 
 const Wrapper = styled.div`
   margin-top: 5rem;
@@ -146,7 +152,7 @@ const Wrapper = styled.div`
     font-weight: bold;
     cursor: pointer;
   }
-  .teams-input {
+  .Projects-input {
     width: 40vw;
     min-width: 300px;
     /* height: 6vh; */
@@ -161,11 +167,9 @@ const Wrapper = styled.div`
     overflow-y: hidden;
   }
   .team-div {
-    /* margin-left: 5px; */
-    display: flex;
+    margin-left: 5px;
     justify-content: center;
     align-items: center;
-    /* height: 5vh; */
   }
   .team-tag {
     background-color: #ffffff;
@@ -196,11 +200,6 @@ const Input = styled.input`
   margin: 10px 0;
   font-size: 1rem;
 `;
-export const BorderBottom = styled.div`
-  margin: 40px 0px;
-  border-bottom: 1px solid #ececec;
-  width: 45vw;
-`;
 
 const Select = styled.select`
   width: 40vw;
@@ -212,4 +211,9 @@ const Select = styled.select`
   border-radius: 10px;
   margin: 10px 0;
   font-size: 1rem;
+`;
+export const BorderBottom = styled.div`
+  margin: 40px 0px;
+  border-bottom: 1px solid #ececec;
+  width: 45vw;
 `;

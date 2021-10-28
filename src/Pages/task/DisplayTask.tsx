@@ -9,88 +9,84 @@ import axios from "axios";
 import { TaskInterface } from "../../Interfaces/interface";
 import { authContext } from "../../Utils/Authcontext";
 
-export const DisplayTask: FC<{ setOpenTask: Function }> = ({ setOpenTask }) => {
-  const { projectId } = useParams<{ projectId: string }>();
+export const DisplayTask: FC<{
+  setOpenTask: Function;
+  setprojectIdForModal: Function;
+}> = ({ setOpenTask, setprojectIdForModal }) => {
+  const { projectId, projectname } =
+    useParams<{ projectId: string; projectname: string }>();
   const [backlogs, setBacklogs] = useState<TaskInterface[]>([]);
   const [todos, setTodos] = useState<TaskInterface[]>([]);
   const [done, setDone] = useState<TaskInterface[]>([]);
   const [loading, setLoading] = useState(false);
   const { token } = useContext(authContext);
+  const [taskForDetail, setTaskForDetail] = useState<TaskInterface>();
 
   const headerlinks = [
-    { name: "Tasks", link: `/tasks/${projectId}` },
-    { name: "Kanban", link: "/kanban" },
-    { name: "Activity", link: "/activity" },
-    { name: "Calendar", link: "/calendar" },
-    { name: "Files", link: "/file" },
+    { name: "Tasks", link: `/tasks/${projectId}/${projectname}` },
+    { name: "Kanban", link: `/kanban/${projectId}/${projectname}` },
+    { name: "Activity", link: `/activity/${projectId}/${projectname}` },
+    { name: "Calendar", link: `/calendar/${projectId}/${projectname}` },
+    { name: "Files", link: `/file/${projectId}/${projectname}` },
   ];
 
   useEffect(() => {
+    console.log("using effect..., projectId:", projectId);
+    rerender();
+  }, [projectId]);
+
+  function rerender() {
+    setTaskForDetail(undefined);
+    //set projectId for parent
+    setprojectIdForModal(projectId);
     //get task with backlog status
     axios
-      .request<{ tasks: TaskInterface[] }>({
+      .request<{
+        tasks: {
+          todo: TaskInterface[];
+          backlog: TaskInterface[];
+          done: TaskInterface[];
+        };
+      }>({
         url: `${
           process.env.REACT_APP_BACKEND_URL as string
-        }/tasks/getTasks/${token}/backlog`,
+        }/tasks/getTasks/${projectId}/backlog`,
         headers: { token: token! },
         method: "get",
       })
       .then((response) => {
+        const { todo, backlog, done } = response.data.tasks;
+        setTodos(todo);
+        setBacklogs(backlog);
+        setDone(done);
         console.log("Success:", response.data.tasks);
       })
       .catch((err) => {
         console.log(err);
         console.log("Error, unable to get Task by status");
       });
-
-    //get task with todo status
-    axios
-      .request<{ tasks: TaskInterface[] }>({
-        url: `${
-          process.env.REACT_APP_BACKEND_URL as string
-        }/tasks/getTasks/${token}/todo`,
-        headers: { token: token! },
-        method: "get",
-      })
-      .then((response) => {
-        console.log("Success:", response.data.tasks);
-      })
-      .catch((err) => {
-        console.log(err);
-        console.log("Error, unable to get Task by status");
-      });
-
-    //get task with done status
-    //get task with backlog status
-    axios
-      .request<{ tasks: TaskInterface[] }>({
-        url: `${
-          process.env.REACT_APP_BACKEND_URL as string
-        }/tasks/getTasks/${token}/done`,
-        headers: { token: token! },
-        method: "get",
-      })
-      .then((response) => {
-        console.log("Success:", response.data.tasks);
-      })
-      .catch((err) => {
-        console.log(err);
-        console.log("Error, unable to get Task by status");
-      });
-  });
+  }
 
   return (
     <div>
-      <Header signOut="signOut" header="PROJECT PRIMUS" headerlinks={headerlinks} />
+      <Header
+        signOut="signOut"
+        header={`${projectname}`}
+        headerlinks={headerlinks}
+      />
       <div style={{ display: "flex" }}>
         <DisplayTaskContainer>
           {/* Display tasks in backlog */}
           <TaskCardGroup title={"Backlog"} setOpenTask={setOpenTask}>
             {backlogs.length > 0 ? (
-              <DisplayTaskCard
-                title="E-mail after registration so that I can confirm my address"
-                tag="Development"
-              />
+              backlogs.map((backlog) => (
+                <DisplayTaskCard
+                  title={backlog.title as string}
+                  tag={backlog.tag as string}
+                  task={backlog}
+                  handleClick={setTaskForDetail}
+                />
+              ))
             ) : (
               <p>No backlogs</p>
             )}
@@ -99,10 +95,14 @@ export const DisplayTask: FC<{ setOpenTask: Function }> = ({ setOpenTask }) => {
 
           <TaskCardGroup title={"Todo"} setOpenTask={setOpenTask}>
             {todos.length > 0 ? (
-              <DisplayTaskCard
-                title="E-mail after registration so that I can confirm my address"
-                tag="UI/UX"
-              />
+              todos.map((todo) => (
+                <DisplayTaskCard
+                  title={todo.title as string}
+                  tag={todo.tag as string}
+                  task={todo}
+                  handleClick={setTaskForDetail}
+                />
+              ))
             ) : (
               <p>No todos</p>
             )}
@@ -110,60 +110,75 @@ export const DisplayTask: FC<{ setOpenTask: Function }> = ({ setOpenTask }) => {
 
           <TaskCardGroup title={"Done"} setOpenTask={setOpenTask}>
             {done.length > 0 ? (
-              <DisplayTaskCard
-                title="E-mail after registration so that I can confirm my address"
-                tag="Development"
-                avatarUrl="https://res.cloudinary.com/projectmanagementgroupb/image/upload/v1634869516/vjjkzu5pxvy3n0sylgua.jpg"
-              />
+              done.map((task_done) => (
+                <DisplayTaskCard
+                  title={task_done.title as string}
+                  tag={task_done.tag as string}
+                  task={task_done}
+                  handleClick={setTaskForDetail}
+                />
+              ))
             ) : (
               <p>No task is done</p>
             )}
           </TaskCardGroup>
         </DisplayTaskContainer>
-        <TaskDescription />
+        <TaskDescription
+          myTask={taskForDetail}
+          rerender={rerender}
+          handleUpdate={setTaskForDetail}
+        />
       </div>
     </div>
   );
 };
 
-const DisplayTaskCard: FC<{ title: string; tag: string; avatarUrl?: string }> =
-  ({ title, tag, avatarUrl = "" }) => {
-    const tagColorAndBg = generateRandomFontColor();
+const DisplayTaskCard: FC<{
+  task: TaskInterface;
+  handleClick: Function;
+  title: string;
+  tag: string;
+  avatarUrl?: string;
+}> = ({ title, tag, avatarUrl = "", handleClick, task }) => {
+  const tagColorAndBg = generateRandomFontColor();
 
-    return (
-      <CardBody custom_background={generateRandomHexColor()}>
-        <div style={{ display: "flex", margin: " 10px 0" }}>
-          <TaskCardCheckBox type="checkbox" />
-          <h3
-            style={{
-              display: "inline-block",
-              marginLeft: "20px",
-              lineHeight: "27px",
-            }}
-          >
-            {title}
-          </h3>
-        </div>
-        <div
+  return (
+    <CardBody
+      onClick={(e) => handleClick(task)}
+      custom_background={generateRandomHexColor()}
+    >
+      <div style={{ display: "flex", margin: " 10px 0" }}>
+        <TaskCardCheckBox type="checkbox" />
+        <h3
           style={{
-            display: "flex",
-            marginLeft: "29px",
-            alignItems: "center",
+            display: "inline-block",
+            marginLeft: "20px",
+            lineHeight: "27px",
           }}
         >
-          <div>
-            {avatarUrl ? <Avatar src={avatarUrl} /> : <AccountCircleIcon />}
-          </div>
-          <TagContainer
-            custom_color={tagColorAndBg.color}
-            background={tagColorAndBg.background}
-          >
-            {tag}
-          </TagContainer>
+          {title}
+        </h3>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          marginLeft: "29px",
+          alignItems: "center",
+        }}
+      >
+        <div>
+          {avatarUrl ? <Avatar src={avatarUrl} /> : <AccountCircleIcon />}
         </div>
-      </CardBody>
-    );
-  };
+        <TagContainer
+          custom_color={tagColorAndBg.color}
+          background={tagColorAndBg.background}
+        >
+          {tag}
+        </TagContainer>
+      </div>
+    </CardBody>
+  );
+};
 
 const TaskCardGroup: FC<{ title: string; setOpenTask: Function }> = ({
   title,

@@ -7,7 +7,7 @@ import Header from "../../components/Header";
 const Homepage = () => {
   return (
     <>
-      <Header signOut= 'signOut' header="Home" headerlinks={[]} />
+      <Header signOut="signOut" header="Home" headerlinks={[]} />
 
       <div className="main_homepage">
         <div className="task_part">

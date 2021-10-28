@@ -18,17 +18,21 @@ import Switch from "react-bootstrap/esm/Switch";
 import Profile from "../profile/Profile";
 import ChangePassword from "../changePassword/ChangePassword";
 import Teams from "../team/Teams";
-import { ProjectInterface, TeamInterface } from "../../Interfaces/interface";
+import {
+  ProjectInterface,
+  TaskInterface,
+  TeamInterface,
+} from "../../Interfaces/interface";
 import AddProject from "../../components/AddaProjedct/AddaPrjedct";
 import File from "../filesPage/File";
 import { DisplayTask } from "../task/DisplayTask";
 import AddTask from "../task/AddTask";
-// import Activity from "../activityPage/Activity";
 import Homepage from "../Home_page/Homepage";
 import Kanban from "../Kanban/Kanban.js";
 import Load from "../../components/Loading/loading";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import InviteCollaborator from "../team/InviteCollab";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -57,8 +61,13 @@ const Home: FC<{}> = ({ children }) => {
   const [imgUrl, setImgUrl] = useState("");
   const [toggle, setToggle] = useState(true);
   const [teams, setTeams] = useState<TeamInterface[]>();
+  const [tasks, setTasks] = useState<TaskInterface[]>();
+  const [taskCompleted, setTaskCompleted] = useState("");
+  const [taskOpened, setTaskOpened] = useState("");
   const [projects, setProjects] = useState<ProjectInterface[]>([]);
   const [openTask, setOpenTask] = useState(false);
+  const [openCollaboratorModal, setOpenCollabModal] = useState(false);
+  const [modalProjectId, setModalProjectId] = useState("");
 
   const showToast = () => {
     toast("I am Tostify!");
@@ -105,6 +114,7 @@ const Home: FC<{}> = ({ children }) => {
       .then((response) => {
         console.log(response);
         setProjects(response.data.projects);
+        getAllTasksForUser();
         setLoading(false);
       })
       .catch((e) => {
@@ -120,6 +130,7 @@ const Home: FC<{}> = ({ children }) => {
   }, []);
 
   const getTeams = () => {
+    console.log("getting the teams");
     axios
       .request<{ teams: TeamInterface[] }>({
         url: "https://kojjac.herokuapp.com/teams/all",
@@ -127,7 +138,25 @@ const Home: FC<{}> = ({ children }) => {
         headers: { token: token! },
       })
       .then((response) => {
+        console.log(response.data.teams);
         setTeams(response.data.teams);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
+
+  const getAllTasksForUser = () => {
+    axios
+      .request<{ tasks: TaskInterface[]; completed: string; open: string }>({
+        url: "https://kojjac.herokuapp.com/tasks",
+        method: "get",
+        headers: { token: token! },
+      })
+      .then((response) => {
+        setTasks(response.data.tasks);
+        setTaskOpened(response.data.open);
+        setTaskCompleted(response.data.completed);
       })
       .catch((err) => {
         console.log(err.response);
@@ -137,6 +166,10 @@ const Home: FC<{}> = ({ children }) => {
   const handleSignOut = () => {
     signOut();
     history.push("/login");
+  };
+
+  const setprojectIdForModal = (newProjectId: string) => {
+    setModalProjectId(newProjectId);
   };
 
   const showSidebar = () => {
@@ -163,6 +196,10 @@ const Home: FC<{}> = ({ children }) => {
 
   const handleCloseTask = () => {
     setOpenTask(false);
+  };
+
+  const handleCloseCollaborator = () => {
+    setOpenCollabModal(false);
   };
 
   return loading ? (
@@ -220,11 +257,11 @@ const Home: FC<{}> = ({ children }) => {
             <li>
               <Statistics className="stats">
                 <div className="stats__left">
-                  <h1>372</h1>
+                  <h1>{taskCompleted}</h1>
                   <p id="tag">completed Tasks</p>
                 </div>
                 <div className="stats__right">
-                  <h1>11</h1>
+                  <h1>{taskOpened}</h1>
                   <p id="tag">Open Taks</p>
                 </div>
               </Statistics>
@@ -286,7 +323,7 @@ const Home: FC<{}> = ({ children }) => {
             {projects?.map((project) => {
               return (
                 <li>
-                  <Link to={`/tasks/${project._id}`}>
+                  <Link to={`/tasks/${project._id}/${project.name}`}>
                     <img
                       style={{ width: "8%", height: "8%" }}
                       src={Icon}
@@ -346,7 +383,10 @@ const Home: FC<{}> = ({ children }) => {
                 >
                   <Fade in={openTask}>
                     <div>
-                      <AddTask />
+                      <AddTask
+                        teams={teams as TeamInterface[]}
+                        projectId={modalProjectId}
+                      />
                     </div>
                   </Fade>
                 </Modal>
@@ -396,18 +436,36 @@ const Home: FC<{}> = ({ children }) => {
                     </div>
                   </Fade>
                 </Modal>
+                {/* modal for inviting collaborators */}
+                <Modal
+                  aria-labelledby="transition-modal-title"
+                  aria-describedby="transition-modal-description"
+                  className={classes.modal}
+                  open={openCollaboratorModal}
+                  onClose={handleCloseCollaborator}
+                  closeAfterTransition
+                  BackdropComponent={Backdrop}
+                  BackdropProps={{
+                    timeout: 500,
+                  }}
+                >
+                  <Fade in={openCollaboratorModal}>
+                    <div>
+                      <InviteCollaborator projects={projects} />
+                    </div>
+                  </Fade>
+                </Modal>
               </a>
               <span className="tooltip">Notifications</span>
-            </li>
-            <li>
-              <a>
-                <span className="">Frontend</span>
-              </a>
             </li>
           </ul>
           <div id="invite__container">
             <span className="invite__text">
-              <Link id="invite" to="#">
+              <Link
+                id="invite"
+                to="#"
+                onClick={(e) => setOpenCollabModal(true)}
+              >
                 Invite your team{" "}
               </Link>
               <span id="collaborate">and start collaborating</span>
@@ -433,15 +491,19 @@ const Home: FC<{}> = ({ children }) => {
               <File />
             </ProtectedRoute>
 
-            <ProtectedRoute path="/tasks/:projectId">
-              <DisplayTask setOpenTask={setOpenTask} />
+            <ProtectedRoute path="/tasks/:projectId/:projectname">
+              <DisplayTask
+                setOpenTask={setOpenTask}
+                setprojectIdForModal={setprojectIdForModal}
+              />
             </ProtectedRoute>
-            {/* <ProtectedRoute path="/activity">
-              <Activity />
-            </ProtectedRoute> */}
 
-            <ProtectedRoute path="/kanban">
+            <ProtectedRoute path="/kanban/:projectId/:projectname">
               <Kanban />
+            </ProtectedRoute>
+
+            <ProtectedRoute path="/">
+              <Homepage />
             </ProtectedRoute>
           </Switch>
         </section>

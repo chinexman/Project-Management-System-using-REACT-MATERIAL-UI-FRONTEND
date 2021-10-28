@@ -9,16 +9,29 @@ export interface ProjectInterface {
 
 export interface TeamInterface {
   teamName: string;
+  _id: string;
+}
+
+interface User {
+  fullname: String;
+  profileImage: String;
+}
+
+export interface CommentInterface {
+  commenter: User;
+  body: String;
+  createdAt: Date;
 }
 
 export interface TaskInterface {
+  _id?: string;
   title: String;
   description: String;
   status: String;
-  owner: String;
-  assignee: String;
+  owner: User;
+  assignee: User;
   fileUploads: String[];
-  comments: String[];
+  comments: CommentInterface[];
   dueDate: Date;
   createdAt: Date;
   projectId: String;

@@ -1,44 +1,103 @@
-import React from "react";
+import { Avatar } from "@material-ui/core";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import { FC, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import Header from "../../components/Header";
+import { TaskInterface, CommentInterface } from "../../Interfaces/interface";
+import axios from "axios";
+import { authContext } from "../../Utils/Authcontext";
 
-export default function TaskDescription() {
+const TaskDescription: FC<{
+  myTask: TaskInterface | undefined;
+  rerender: Function;
+  handleUpdate: Function;
+}> = ({ myTask, rerender, handleUpdate }) => {
+  const [commentText, setCommentText] = useState("");
+  // const [comments, setCommentList] = useState(task?.comments);
+  let task = myTask;
+
+  const { token } = useContext(authContext);
+
+  console.log("Task:", task);
+
+  const handleComment = (e: any) => {
+    console.log("Submitting comment...");
+    e.preventDefault();
+    axios
+      .request<{
+        task?: TaskInterface;
+        comment?: string;
+        projectId: String;
+      }>({
+        url: `${process.env.REACT_APP_BACKEND_URL as string}/comments/comment/${
+          task?._id
+        }`,
+        headers: { token: token! },
+        method: "post",
+        data: {
+          comment: commentText,
+          projectId: task?.projectId as String,
+        },
+      })
+      .then((response) => {
+        // setCommentList(response.data.task!.comments);
+        // setTask(response.data.task!);
+        console.log("Success:", response.data);
+        task = response.data.task;
+        rerender();
+        handleUpdate(task);
+        //clear input field
+        setCommentText("");
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log("Error, unable to get Task by status");
+      });
+  };
+
   return (
     <>
       <Wrappers>
-        <TaskWrapper>
-          <TaskHeader>
-            <div className="header">
-              <h4 className="headerTitle">Find top 5 customer request</h4>
-              <p className="headerText">
-                Added by Kristin A. <span>Yesterday at 12.41pm</span>{" "}
-              </p>
-            </div>
-            {/* <div className="rightIcons">
-              <span>
-                <i className="fas fa-check-square"></i>
-              </span>{" "}
-              <span>
-                <i className="fas fa-ellipsis-h"></i>
-              </span>
-            </div> */}
-          </TaskHeader>
-          <Assigned>
-            <div className="assignedInfo">
-              <div className="assignedHeader">ASIGN TO</div>
-              <div className="assignedDetail">
-                <i className="far fa-laugh"></i>Linzell Bowman
-              </div>
-            </div>
-            <div className="assignedInfo">
-              <div className="assignedHeader">DUE ON</div>
-              <div className="assignedDetail">Tue, Dec 25</div>
-            </div>
-            <div className="assignedInfo">
-              <div className="assignedHeader">TAG</div>
-              <div className="assignedTag">Marketing</div>
-            </div>
-            {/* <div className="assignedInfo">
+        {task !== undefined ? (
+          <>
+            <TaskWrapper>
+              <TaskHeader>
+                <div className="header">
+                  <h4 className="headerTitle">{task.title}</h4>
+                  <p className="headerText">
+                    Added by {task.owner.fullname}{" "}
+                    <span>{new Date(task.createdAt).toDateString()}</span>{" "}
+                  </p>
+                </div>
+              </TaskHeader>
+              <Assigned>
+                <div className="assignedInfo">
+                  <div className="assignedHeader">ASIGN TO</div>
+                  <div
+                    className="assignedDetail"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-evenly",
+                    }}
+                  >
+                    <Avatar src={task.assignee.profileImage as string} />
+                    <p style={{ marginLeft: "10px" }}>
+                      {task.assignee.fullname}
+                    </p>
+                  </div>
+                </div>
+                <div className="assignedInfo">
+                  <div className="assignedHeader">DUE ON</div>
+                  <div className="assignedDetail">
+                    {new Date(task.dueDate).toDateString()}
+                  </div>
+                </div>
+                <div className="assignedInfo">
+                  <div className="assignedHeader">TAG</div>
+                  <div className="assignedTag">{task.tag}</div>
+                </div>
+                {/* <div className="assignedInfo">
               <div className="assignedHeader">Followers</div>
               <div className="assignedDetail">
                 <span>
@@ -52,100 +111,87 @@ export default function TaskDescription() {
                 </span>
               </div>
             </div> */}
-          </Assigned>
-          <hr className="horizontalLine" />
-          <Description>
-            <h4 className="descriptionHeader">DESCRIPTION</h4>
-            <p className="descriptionText">
-              Task Descriptions are used during project planning, project
-              execution and project control. During project planning the task
-              descriptions are used for scope planning and creating estimates.
-              During project execution the task description is used by those
-              doing the activities to ensure they are doing the work correctly.
-            </p>
-            <div className="fileswrapper">
-              <div className="files">
-                <div className="filesIcon">
-                  <i className="fas fa-file-pdf"></i>
-                </div>
-                <div className="filesdetails">
-                  <p className="filesname">Redesign Brief 2019.pdf</p>
-                  <p className="filessize">
-                    159 KB
-                    <span> Delete</span>
-                  </p>
-                </div>
+              </Assigned>
+              <hr className="horizontalLine" />
+              <Description>
+                <h4 className="descriptionHeader">DESCRIPTION</h4>
+                <p className="descriptionText">{task.description}</p>
+                {/* <div className="fileswrapper">
+                  <div className="files">
+                    <div className="filesIcon">
+                      <i className="fas fa-file-pdf"></i>
+                    </div>
+                    <div className="filesdetails">
+                      <p className="filesname">Redesign Brief 2019.pdf</p>
+                      <p className="filessize">
+                        159 KB
+                        <span> Delete</span>
+                      </p>
+                    </div>
+                  </div>
+                  <div className="files">
+                    <div className="filesIcon">
+                      <i className="fas fa-file-pdf"></i>
+                    </div>
+                    <div className="filedestails">
+                      <p className="filesname">Header.png</p>
+                      <p className="filessize">
+                        129 KB
+                        <span> Delete</span>
+                      </p>
+                    </div>
+                  </div>
+                </div> */}
+              </Description>
+            </TaskWrapper>
+            <hr className="horizontalLine" />
+            <Discussions>
+              <h3 className="discussionsHeader">DISCUSSIONS</h3>
+              <div className="addComment">
+                <form onSubmit={handleComment}>
+                  <div className="inputImage">
+                    <Avatar src={task.assignee.profileImage as string} />
+                    <p>{task.assignee.fullname}</p>
+                  </div>
+                  <input
+                    placeholder="Add a comment"
+                    className="commentInput"
+                    type="text"
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                  />
+                </form>
               </div>
-              <div className="files">
-                <div className="filesIcon">
-                  <i className="fas fa-file-pdf"></i>
-                </div>
-                <div className="filedestails">
-                  <p className="filesname">Header.png</p>
-                  <p className="filessize">
-                    129 KB
-                    <span> Delete</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Description>
-        </TaskWrapper>
-        <hr className="horizontalLine" />
-        <Discussions>
-          <h3 className="discussionsHeader">DISCUSSIONS</h3>
-          <div className="addComment">
-            <div className="inputImage">
-              <i className="far fa-grin-tongue-wink"></i>
-            </div>
-            <input
-              placeholder="Add a comment"
-              className="commentInput"
-              type="text"
-            />
-          </div>
-
-          <div className="addComment">
-            <div className="avatar">
-              <i className="fas fa-grin-stars"></i>
-            </div>
-            <div className="comments">
-              <div className="commentHeader">
-                <h6 className="commenter">
-                  Helena Bauer,<span>Designer</span>
-                </h6>
-                <p>Yesterday at 12.37pm</p>
-              </div>
-              <div className="commentContent">
-                During a project build, it is necessary to evaluate the product
-                design and development against project requirements and outcomes
-              </div>
-            </div>
-          </div>
-
-          <div className="addComment">
-            <div className="avatar">
-              {/* <i className="fas fa-user-alt"></i> */}
-              <i className="fas fa-grin-stars"></i>
-            </div>
-            <div className="comments">
-              <div className="commentHeader">
-                <h6 className="commenter">
-                  Helena Bauer, <span>Designer</span>
-                </h6>
-                <p>Yesterday at 12.37pm</p>
-              </div>
-              <div className="commentContent">
-                @Helena Software quality assurance activity in which one or
-                several humans check a program mainly
-              </div>
-            </div>
-          </div>
-        </Discussions>
+              {task.comments!.length > 0 &&
+                task.comments!.map((comment, index) => {
+                  return <CommentComponent comment={comment} key={index} />;
+                })}
+            </Discussions>
+          </>
+        ) : (
+          <p style={{ padding: "20px" }}>No task detail to display.</p>
+        )}
       </Wrappers>
     </>
   );
-}
+};
+
+const CommentComponent: FC<{ comment: CommentInterface }> = ({ comment }) => {
+  return (
+    <div className="addComment">
+      <div className="avatar">
+        <Avatar src={comment.commenter?.profileImage as string} />
+      </div>
+      <div className="comments">
+        <div className="commentHeader">
+          <h6 className="commenter">{comment.commenter?.fullname}</h6>
+          <p>{new Date(comment.createdAt).toDateString()}</p>
+        </div>
+        <div className="commentContent">{comment.body}</div>
+      </div>
+    </div>
+  );
+};
 
 export const Wrappers = styled.main`
   margin-top: 5px;
@@ -335,3 +381,5 @@ export const Discussions = styled.main`
     padding-left: 20px;
   }
 `;
+
+export default TaskDescription;
